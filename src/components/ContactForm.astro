@@ -1,0 +1,119 @@
+---
+/**
+ * ContactForm Component
+ * Investor inquiry form — captures name, email, phone, allocation size, and message.
+ * All labels and options driven from siteData.json.
+ */
+import siteData from '../data/siteData.json';
+const { contact } = siteData;
+---
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <div class="section-header center">
+        <p class="subtitle">{contact.subtitle}</p>
+        <h2>{contact.title}</h2>
+        <p>{contact.description}</p>
+      </div>
+
+      <form class="contact-form" id="contact-form" data-webhook={import.meta.env.PUBLIC_N8N_WEBHOOK_URL}>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" name="name" placeholder="Full Name (or Entity)" required />
+          </div>
+          <div class="form-field">
+            <input type="email" name="email" placeholder="Email Address" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="tel" name="phone" placeholder="Phone Number" />
+          </div>
+          <div class="form-field">
+            <select name="allocation" required>
+              <option value="" disabled selected>Allocation Capacity</option>
+              {contact.allocationOptions.map((opt) => (
+                <option value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field" style="flex:1;">
+            <textarea name="message" placeholder="Tell us about your investment goals..." rows="4"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary submit-btn">Request Access Package</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  const contactForm = document.getElementById('contact-form');
+  
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = contactForm.querySelector('.submit-btn');
+      const originalText = btn.textContent;
+      const webhookUrl = contactForm.getAttribute('data-webhook');
+      
+      if (!webhookUrl || webhookUrl.includes('your-n8n-domain')) {
+        alert("n8n Webhook URL is not configured yet in .env!");
+        return;
+      }
+      
+      // Update UI to loading state
+      btn.textContent = 'Sending...';
+      btn.style.opacity = '0.8';
+      btn.disabled = true;
+
+      // Extract form data
+      const formData = new FormData(contactForm);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          // Success Feedback
+          btn.textContent = 'Request Sent ✓';
+          btn.style.background = 'linear-gradient(135deg, #2ecc71, #1abc9c)';
+          btn.style.opacity = '1';
+          
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+            contactForm.reset();
+          }, 3000);
+        } else {
+          throw new Error('Server returned ' + response.status);
+        }
+      } catch (error) {
+        console.error('Webhook payload failed:', error);
+        
+        // Error Feedback
+        btn.textContent = 'Error Sending';
+        btn.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+        btn.style.opacity = '1';
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 3000);
+      }
+    });
+  }
+</script>

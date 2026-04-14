@@ -1,0 +1,102 @@
+---
+/**
+ * WhyInvest Component
+ * "Why Invest In Us" — the full investment thesis section.
+ * Contains: Stats Grid → Process Pillars → Bento Moat Grid.
+ * All data driven from siteData.json.
+ */
+import siteData from '../data/siteData.json';
+const { whyInvest } = siteData;
+---
+
+<section class="invest" id="invest">
+  <div class="container relative">
+    <div class="watermark left">ALPHA</div>
+
+    <!-- Section 1: Stats Header -->
+    <div class="section-header">
+      <p class="subtitle">{whyInvest.subtitle}</p>
+      <h2>{whyInvest.title}</h2>
+      <p>{whyInvest.description}</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      {whyInvest.stats.map((stat) => (
+        <div class="stat-card">
+          <div class="stat-number">
+            {stat.prefix && <span class="accent">{stat.prefix}</span>}
+            {stat.value}
+            {stat.suffix && <span class="accent">{stat.suffix}</span>}
+          </div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Section 2: Process Pillars -->
+    <div class="pillars-header">
+      <p class="subtitle">The Process</p>
+      <h2>The Velocity Engine.</h2>
+      <p>Unlike real estate, our asset class combines high margins with rapid liquidity cycles.</p>
+    </div>
+
+    <div class="pillars-grid">
+      {whyInvest.pillars.map((pillar) => (
+        <div class="pillar-card">
+          <div class="pillar-phase">
+            <i class={pillar.icon}></i>
+            <span>Phase {pillar.phase}</span>
+          </div>
+          <h3>{pillar.title}</h3>
+          <p>{pillar.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Section 3: Bento Moat Grid -->
+    <div class="moat-header">
+      <p class="subtitle">Competitive Advantage</p>
+      <h2>Structural Market Dominance.</h2>
+    </div>
+
+    <div class="bento-grid">
+      {whyInvest.moatItems.map((item) => {
+        if (item.image && !item.statValue) {
+          // Image box
+          const sizeClass = item === whyInvest.moatItems[0] ? 'bento-large' : 'bento-tall';
+          return (
+            <div class={`bento-box ${sizeClass}`}>
+              <img src={item.image} alt={item.title} />
+              <div class="bento-overlay"></div>
+              <div class="bento-content">
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            </div>
+          );
+        } else if (item.statValue) {
+          // Stat box
+          const styleClass = item.style === 'gold' ? 'bento-gold' : 'bento-dark';
+          return (
+            <div class={`bento-box bento-stat ${styleClass}`}>
+              <div class="stat-number">
+                {item.statValue}<span class="accent">{item.statSuffix}</span>
+              </div>
+              <div class="stat-label">{item.label}</div>
+              <i class={`${item.icon} bento-icon`}></i>
+            </div>
+          );
+        } else {
+          // Text box
+          return (
+            <div class="bento-box bento-text-box bento-dark bento-wide">
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          );
+        }
+      })}
+    </div>
+  </div>
+</section>

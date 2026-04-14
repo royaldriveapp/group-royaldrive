@@ -1,0 +1,44 @@
+---
+/**
+ * FindUs Component
+ * "Where to Find Us" — Location cards with address, phone, and email.
+ * Data driven from siteData.json locations array.
+ */
+import siteData from '../data/siteData.json';
+const { locations } = siteData;
+---
+
+<section class="locations" id="locations">
+  <div class="container relative">
+    <div class="watermark right">GLOBAL</div>
+
+    <div class="section-header center">
+      <p class="subtitle">{locations.subtitle}</p>
+      <h2>{locations.title}</h2>
+      <p>{locations.description}</p>
+    </div>
+
+    <div class="locations-grid">
+      {locations.offices.map((office) => (
+        <div class="location-card">
+          <div class="location-city">
+            <i class="fa-solid fa-location-dot"></i>
+            {office.city}
+          </div>
+          <div class="location-detail">
+            <i class="fa-solid fa-building"></i>
+            <span>{office.address}<br />{office.region}</span>
+          </div>
+          <div class="location-detail">
+            <i class="fa-solid fa-phone"></i>
+            <a href={`tel:${office.phone}`}>{office.phone}</a>
+          </div>
+          <div class="location-detail">
+            <i class="fa-solid fa-envelope"></i>
+            <a href={`mailto:${office.email}`}>{office.email}</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,246 @@
+---
+/**
+ * Royal Drive Investors — Main Landing Page
+ *
+ * This page assembles all section components into the final layout.
+ * Content is driven entirely from /src/data/siteData.json.
+ *
+ * To change ANY text, stat, FAQ item, or location:
+ *   → Open /src/data/siteData.json and edit the values.
+ *   → The components will automatically reflect the changes.
+ *
+ * To connect a Headless CMS (e.g. Sanity, Strapi):
+ *   → Replace the JSON imports in each component with CMS API calls.
+ *   → The component structure stays identical.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import HeroSection from '../components/HeroSection.astro';
+import AboutUs from '../components/AboutUs.astro';
+import WhyInvest from '../components/WhyInvest.astro';
+import ReturnsCalculator from '../components/ReturnsCalculator.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import ContactForm from '../components/ContactForm.astro';
+import FindUs from '../components/FindUs.astro';
+import Footer from '../components/Footer.astro';
+
+import '../styles/global.css';
+---
+
+<BaseLayout>
+
+  <Header />
+
+  <main>
+    <HeroSection />
+    <AboutUs />
+    <WhyInvest />
+    <ReturnsCalculator />
+    <FaqAccordion />
+    <ContactForm />
+    <FindUs />
+  </main>
+
+  <Footer />
+
+  <!-- Page Animations -->
+  <script is:inline>
+    // ==============================================================
+    // LENIS SMOOTH SCROLLING (Ultra Fluid)
+    // ==============================================================
+    const lenis = new Lenis({
+      lerp: 0.05, // Lower is smoother/butter-like
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    // ==============================================================
+    // CUSTOM CURSOR
+    // ==============================================================
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+
+    if (window.innerWidth > 1024 && cursor && follower) {
+      let posX = 0, posY = 0;
+      let mouseX = 0, mouseY = 0;
+
+      gsap.to({}, 0.016, {
+        repeat: -1,
+        onRepeat: function() {
+          posX += (mouseX - posX) / 9;
+          posY += (mouseY - posY) / 9;
+          gsap.set(follower, { css: { left: posX, top: posY } });
+          gsap.set(cursor, { css: { left: mouseX, top: mouseY } });
+        }
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      const clickables = document.querySelectorAll('a, button, .accordion-header, input, select, textarea');
+      clickables.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          follower.classList.add('hover-active');
+          cursor.classList.add('hover-active');
+        });
+        el.addEventListener('mouseleave', () => {
+          follower.classList.remove('hover-active');
+          cursor.classList.remove('hover-active');
+        });
+      });
+    }
+
+    // ==============================================================
+    // GSAP SCROLL ANIMATIONS & LUXURY EFFECTS
+    // ==============================================================
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Wait for full page load (images, iframes, fonts) so pin heights
+    // and trigger positions are calculated correctly.
+    window.addEventListener('load', () => {
+
+      // --- Magnetic Buttons ---
+      if (window.innerWidth > 1024) {
+        document.querySelectorAll('.btn, .accordion-header').forEach(btn => {
+          btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' });
+          });
+          btn.addEventListener('mouseleave', () => {
+            gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+          });
+        });
+      }
+
+      // --- Hero Timeline ---
+      const tlHero = gsap.timeline();
+      tlHero
+        .from('.navbar', { y: -50, opacity: 0, duration: 1, ease: 'power3.out' })
+        .from('.hero-split-text > *', { y: 20, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out' }, '-=0.5')
+        .from('.hero-split-video', { scale: 0.95, opacity: 0, duration: 1, ease: 'power3.out' }, '-=0.5');
+
+      // --- About Section (Horizontal Scroll Carousel) ---
+      if (window.innerWidth > 768) {
+        const horizontalSection = document.querySelector(".horizontal-section");
+        const horizontalContainer = document.querySelector(".horizontal-container");
+
+        if (horizontalSection && horizontalContainer) {
+          gsap.to(horizontalContainer, {
+              x: () => -(horizontalContainer.scrollWidth - window.innerWidth),
+              ease: "none",
+              scrollTrigger: {
+                  trigger: horizontalSection,
+                  start: "top top",
+                  pin: true,
+                  scrub: 1,
+                  end: () => "+=" + horizontalContainer.scrollWidth,
+                  invalidateOnRefresh: true,
+                  refreshPriority: 1
+              }
+          });
+          
+          gsap.to(".collection-mark", {
+              xPercent: -30,
+              ease: "none",
+              scrollTrigger: {
+                  trigger: horizontalSection,
+                  start: "top top",
+                  scrub: 1,
+                  end: () => "+=" + horizontalContainer.scrollWidth
+              }
+          });
+        }
+      } else {
+        gsap.from('.about-mobile-card', {
+          scrollTrigger: { trigger: '#about', start: 'top 80%' },
+          y: 40,
+          opacity: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: 'power3.out'
+        });
+      }
+
+      // ==============================================================
+      // SCROLL REVEAL (IntersectionObserver — works perfectly with Lenis)
+      // ==============================================================
+      // Add hidden state immediately via CSS
+      const style = document.createElement('style');
+      style.textContent = `
+        .reveal-up {
+          opacity: 0;
+          transform: translateY(50px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Tag all elements that need scroll-reveal
+      const revealSelectors = [
+        '.invest .section-header',
+        '.about-mobile-intro',
+        '.about-mobile-card',
+        '.stat-card',
+        '.pillars-header',
+        '.pillar-card',
+        '.moat-header',
+        '.bento-box',
+        '.calculator-section',
+        '.faq-left',
+        '.accordion-item',
+        '.contact-box',
+        '.location-card',
+        '.footer-brand',
+        '.link-column'
+      ];
+
+      const revealElements = [];
+      revealSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+          el.classList.add('reveal-up');
+          revealElements.push(el);
+        });
+      });
+
+      // Create observer
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Stagger delay based on sibling index for grouped items
+            const parent = entry.target.parentElement;
+            const siblings = parent ? Array.from(parent.querySelectorAll(':scope > .reveal-up')) : [];
+            const index = siblings.indexOf(entry.target);
+            const delay = index >= 0 ? index * 100 : 0; // 100ms stagger
+            
+            setTimeout(() => {
+              entry.target.classList.add('revealed');
+            }, delay);
+            
+            observer.unobserve(entry.target); // Only animate once
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      revealElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</BaseLayout>

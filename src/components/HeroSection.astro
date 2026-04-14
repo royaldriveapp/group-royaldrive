@@ -1,0 +1,128 @@
+---
+/**
+ * HeroSection Component
+ * Split-layout hero with clear text and a prominent, bordered video frame.
+ */
+import siteData from '../data/siteData.json';
+const { hero } = siteData;
+---
+
+<section class="hero-split" id="home">
+  <div class="container hero-container">
+    <div class="hero-split-text">
+      <p class="subtitle hero-subtitle">{hero.subtitle}</p>
+      <div class="hero-title-wrapper">
+        <h1 class="hero-title">{hero.title}</h1>
+      </div>
+      <p class="hero-description">{hero.description}</p>
+      <div class="hero-actions">
+        <a href={hero.primaryCta.href} class="btn btn-primary">{hero.primaryCta.label}</a>
+        <a href={hero.secondaryCta.href} class="btn btn-link">
+          {hero.secondaryCta.label} <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-split-video">
+      <div class="video-frame">
+        <iframe
+          src={`https://www.youtube.com/embed/${hero.videoUrl}?autoplay=1&mute=0&controls=1&loop=1&playlist=${hero.videoUrl}&modestbranding=1&rel=0&showinfo=0`}
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          class="visible-youtube-bg"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-split {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px; /* Accounts for fixed header */
+    background: radial-gradient(circle at top right, rgba(201, 168, 76, 0.05) 0%, var(--clr-bg) 60%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-container {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+  }
+
+  .hero-split-text {
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .hero-split-video {
+    flex: 1.2;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--clr-surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  }
+
+  .video-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-xl);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .visible-youtube-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-container {
+      flex-direction: column;
+      padding-top: 6rem;
+      padding-bottom: 4rem;
+    }
+    .hero-split-video {
+      width: 100%;
+    }
+  }
+</style>

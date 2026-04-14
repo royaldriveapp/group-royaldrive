@@ -1,0 +1,72 @@
+---
+/**
+ * Header Component
+ * Dynamic navbar — transparent at top, frosted glass on scroll.
+ * Includes mobile hamburger menu with fullscreen overlay.
+ * Reads navigation data from siteData.json.
+ */
+import siteData from '../data/siteData.json';
+const { site, navigation } = siteData;
+---
+
+<nav class="navbar" id="main-navbar">
+  <a href="#" class="logo">
+    {site.brandName} <span class="brand-accent">{site.brandTagline}</span>
+  </a>
+
+  <div class="nav-links" id="nav-links">
+    {navigation.links.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+  </div>
+
+  <div class="nav-right">
+    <a href="#contact" class="btn btn-outline nav-cta">Get in Touch</a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<style>
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .nav-cta { display: none; }
+  }
+</style>
+
+<script is:inline>
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      navLinks.classList.toggle('mobile-open');
+    });
+
+    // Close menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navLinks.classList.remove('mobile-open');
+      });
+    });
+  }
+
+  // Navbar scroll effect
+  const navbar = document.getElementById('main-navbar');
+  window.addEventListener('scroll', () => {
+    if (navbar) {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    }
+  });
+</script>

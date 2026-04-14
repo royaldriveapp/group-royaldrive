@@ -1,0 +1,299 @@
+{
+  "site": {
+    "title": "Royal Drive Investors | Private Exotic Auto Equity",
+    "description": "Invest in the highest-yielding alternative asset class: pre-owned exotic and luxury automotives.",
+    "brandName": "ROYAL DRIVE",
+    "brandTagline": "INVESTORS",
+    "copyright": "© 2026 Royal Drive Partners LLC. All rights reserved. Past performance is not indicative of future results."
+  },
+  "navigation": {
+    "links": [
+      {
+        "label": "About",
+        "href": "#about"
+      },
+      {
+        "label": "Why Invest",
+        "href": "#invest"
+      },
+      {
+        "label": "FAQ",
+        "href": "#faq"
+      },
+      {
+        "label": "Contact",
+        "href": "#contact"
+      },
+      {
+        "label": "Find Us",
+        "href": "#locations"
+      }
+    ]
+  },
+  "hero": {
+    "subtitle": "Alternative Asset Class",
+    "title": "Accelerate Your Capital.",
+    "description": "Capitalize on the highly fragmented exotic auto market. Discover high-turnover, high-margin opportunities curated for the institutional investor.",
+    "primaryCta": {
+      "label": "Request Prospectus",
+      "href": "#contact"
+    },
+    "secondaryCta": {
+      "label": "View Investment Thesis",
+      "href": "#invest"
+    },
+    "videoUrl": "FF96MAFKur4",
+    "videoPoster": "/images/porsche.png"
+  },
+  "about": {
+    "subtitle": "Who We Are",
+    "title": "The Intersection of Passion & Performance.",
+    "description": "Royal Drive is a premier exotic and luxury auto dealership with a vertically integrated investment thesis. We acquire, recondition, and deploy high-value vehicles through an elite global network — turning physical assets into financial instruments.",
+    "features": [
+      {
+        "icon": "fa-solid fa-gem",
+        "title": "Curated Acquisitions",
+        "description": "We source only the most sought-after marques — Porsche, Ferrari, Lamborghini, McLaren — through proprietary off-market deal flow."
+      },
+      {
+        "icon": "fa-solid fa-wrench",
+        "title": "In-House Excellence",
+        "description": "Our master technicians execute institutional-grade reconditioning, eliminating third-party margins and maximizing asset value."
+      },
+      {
+        "icon": "fa-solid fa-globe",
+        "title": "Global Distribution",
+        "description": "An established network of collectors, dealerships, and auction houses ensures rapid, premium-priced asset deployment."
+      }
+    ]
+  },
+  "whyInvest": {
+    "subtitle": "Investment Thesis",
+    "title": "Uncompromising Alpha.",
+    "description": "A track record defined by precision acquisition, rapid turnover, and optimized yields in a tangible, asset-backed category.",
+    "stats": [
+      {
+        "value": "24",
+        "suffix": "%",
+        "label": "Target Core Net IRR"
+      },
+      {
+        "value": "28",
+        "suffix": "d",
+        "prefix": "<",
+        "label": "Average Inventory Hold"
+      },
+      {
+        "value": "50",
+        "suffix": "M+",
+        "prefix": "$",
+        "label": "AUM Deployed"
+      },
+      {
+        "value": "100",
+        "suffix": "%",
+        "label": "Asset-Backed Security"
+      }
+    ],
+    "pillars": [
+      {
+        "phase": "01",
+        "title": "Algorithmic Sourcing.",
+        "description": "Proprietary data models identify distressed, unlisted, and dramatically underpriced exotic inventory globally before they hit retail markets.",
+        "icon": "fa-solid fa-magnifying-glass-chart"
+      },
+      {
+        "phase": "02",
+        "title": "Value-Add Reconditioning.",
+        "description": "In-house master technicians execute rapid, institutional-grade reconditioning to eradicate deferred maintenance and force premium appreciation.",
+        "icon": "fa-solid fa-gears"
+      },
+      {
+        "phase": "03",
+        "title": "High-Velocity Retail.",
+        "description": "Assets are deployed into an elite, established network of global collectors and dealerships, ensuring capital rotation in under 30 days.",
+        "icon": "fa-solid fa-rocket"
+      }
+    ],
+    "moatItems": [
+      {
+        "title": "In-House Restorations",
+        "description": "Controlling all service internally eliminates 3rd-party margins, capturing maximum spread before resale.",
+        "image": "/images/engine.png"
+      },
+      {
+        "statValue": "12",
+        "statSuffix": "x",
+        "label": "Annual Capital Rotations",
+        "icon": "fa-solid fa-arrow-rotate-right",
+        "style": "dark"
+      },
+      {
+        "statValue": "0",
+        "statSuffix": "%",
+        "label": "Credit Default Correlation",
+        "icon": "fa-solid fa-shield-halved",
+        "style": "gold"
+      },
+      {
+        "title": "Data Arbitrage",
+        "description": "Proprietary pricing algorithms detect macroeconomic fluctuations ahead of the curve.",
+        "image": "/images/interior.png"
+      },
+      {
+        "title": "Tangible Asset Collateral",
+        "description": "Every dollar deployed is backed by physical, highly sought-after exotic vehicles with intrinsic global demand.",
+        "style": "dark-wide"
+      }
+    ]
+  },
+  "faq": {
+    "subtitle": "Clarity & Transparency",
+    "title": "Investor FAQ",
+    "description": "Clarity and transparency are the bedrock of our fiduciary duty.",
+    "items": [
+      {
+        "question": "What is the minimum investment?",
+        "answer": "test"
+      },
+      {
+        "question": "How often are distributions paid?",
+        "answer": "Distributions from operational cash flow are typically remitted on a quarterly basis, accompanied by a comprehensive K-1 and performance report on your capital's rotation."
+      },
+      {
+        "question": "What is the target hold period?",
+        "answer": "While the underlying assets rotate every 28 days on average, capital commitments are structured on open-ended or 3-year term structures depending on the specific vehicle selected."
+      },
+      {
+        "question": "Are these investments strictly for accredited investors?",
+        "answer": "Yes. Under current SEC regulations (Regulation D, Rule 506), participation in Royal Drive offerings requires verifying accredited investor or qualified purchaser status."
+      },
+      {
+        "question": "What asset classes does Royal Drive focus on?",
+        "answer": "We specialize exclusively in pre-owned exotic and luxury automobiles from marques such as Porsche, Ferrari, Lamborghini, McLaren, Aston Martin, and Bentley — vehicles with proven demand and collector appreciation."
+      }
+    ]
+  },
+  "contact": {
+    "subtitle": "Get Started",
+    "title": "Review the Prospectus.",
+    "description": "Initiate a private consultation with our principal team to explore current fund offerings and secure your allocation.",
+    "allocationOptions": [
+      {
+        "value": "250k-500k",
+        "label": "$250k - $500k"
+      },
+      {
+        "value": "500k-1m",
+        "label": "$500k - $1M"
+      },
+      {
+        "value": "1m-5m",
+        "label": "$1M - $5M"
+      },
+      {
+        "value": "5m+",
+        "label": "$5M+"
+      }
+    ]
+  },
+  "locations": {
+    "subtitle": "Visit Us",
+    "title": "Where to Find Us",
+    "description": "Experience the Royal Drive showroom in person and see our current inventory firsthand.",
+    "offices": [
+      {
+        "city": "Dubai",
+        "address": "Sheikh Zayed Road, Tower 3, Suite 1200",
+        "region": "Dubai, UAE",
+        "phone": "+971 4 555 0100",
+        "email": "dubai@royaldrive.com",
+        "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.178!2d55.2708!3d25.2048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDEyJzE3LjMiTiA1NcKwMTYnMTQuOSJF!5e0!3m2!1sen!2sae!4v1"
+      },
+      {
+        "city": "London",
+        "address": "21 Berkeley Square, Mayfair",
+        "region": "London W1J 6EQ, UK",
+        "phone": "+44 20 7946 0958",
+        "email": "london@royaldrive.com"
+      },
+      {
+        "city": "Miami",
+        "address": "1200 Brickell Avenue, Suite 1950",
+        "region": "Miami, FL 33131, USA",
+        "phone": "+1 (305) 555-0199",
+        "email": "miami@royaldrive.com"
+      }
+    ]
+  },
+  "footer": {
+    "tagline": "Accelerating wealth through tangible automotive assets.",
+    "columns": [
+      {
+        "title": "Company",
+        "links": [
+          {
+            "label": "The Thesis",
+            "href": "#invest"
+          },
+          {
+            "label": "Leadership Team",
+            "href": "#about"
+          },
+          {
+            "label": "Careers",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "title": "Investments",
+        "links": [
+          {
+            "label": "Track Record",
+            "href": "#invest"
+          },
+          {
+            "label": "FAQ",
+            "href": "#faq"
+          },
+          {
+            "label": "Audit Reports",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "title": "Legal",
+        "links": [
+          {
+            "label": "Privacy Policy",
+            "href": "#"
+          },
+          {
+            "label": "Terms of Service",
+            "href": "#"
+          },
+          {
+            "label": "Form ADV & Disclosures",
+            "href": "#"
+          }
+        ]
+      }
+    ],
+    "socials": [
+      {
+        "icon": "fa-brands fa-linkedin-in",
+        "href": "#"
+      },
+      {
+        "icon": "fa-brands fa-x-twitter",
+        "href": "#"
+      },
+      {
+        "icon": "fa-brands fa-instagram",
+        "href": "#"
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+---
+/**
+ * Footer Component
+ * Clean, dynamic footer with branding, link columns, social icons.
+ * All content driven from siteData.json.
+ */
+import siteData from '../data/siteData.json';
+const { site, footer } = siteData;
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          {site.brandName} <span class="brand-accent">{site.brandTagline}</span>
+        </div>
+        <p>{footer.tagline}</p>
+        <div class="footer-socials">
+          {footer.socials.map((social) => (
+            <a href={social.href} aria-label="Social link" target="_blank" rel="noopener noreferrer">
+              <i class={social.icon}></i>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="footer-links">
+        {footer.columns.map((col) => (
+          <div class="link-column">
+            <h4>{col.title}</h4>
+            {col.links.map((link) => (
+              <a href={link.href}>{link.label}</a>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>{site.copyright}</p>
+    </div>
+  </div>
+</footer>
