@@ -8,11 +8,8 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/markdoc": "^0.15.6",
     "@astrojs/netlify": "^6.5.9",
     "@astrojs/react": "^4.3.1",
-    "@keystatic/astro": "^5.0.6",
-    "@keystatic/core": "^0.5.50",
     "astro": "^5.13.5",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"

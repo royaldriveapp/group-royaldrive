@@ -1,13 +1,9 @@
----
-const error = Astro.url.searchParams.get('error');
----
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Control</title>
+  <title>Content Admin</title>
   <style>
     :root {
       --bg: #050505;
@@ -81,46 +77,49 @@ const error = Astro.url.searchParams.get('error');
       font-size: 14px;
     }
 
-    .field {
-      margin-bottom: 14px;
+    .actions {
+      display: grid;
+      gap: 12px;
     }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      color: var(--text-muted);
+    a {
+      text-decoration: none;
     }
 
-    input {
+    .primary-link,
+    .secondary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--surface-strong);
-      color: var(--text);
-      font: inherit;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 4px var(--gold-soft);
-    }
-
-    button {
-      width: 100%;
-      margin-top: 8px;
       padding: 14px 18px;
-      border: none;
       border-radius: 999px;
-      background: linear-gradient(135deg, #d6b35b, #b99032);
-      color: #111;
+      border: 1px solid var(--border);
       font: inherit;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .primary-link {
+      background: linear-gradient(135deg, #d6b35b, #b99032);
+      color: #111;
+      border: none;
+    }
+
+    .secondary-link {
+      background: var(--surface-strong);
+      color: var(--text);
+    }
+
+    .primary-link:hover,
+    .secondary-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .secondary-link:hover {
+      border-color: var(--gold);
     }
 
     .note {
@@ -133,32 +132,15 @@ const error = Astro.url.searchParams.get('error');
 <body>
   <main class="panel">
     <p class="eyebrow">Royal Drive</p>
-    <h1>Admin Control</h1>
-    <p>Sign in to manage the Keystatic content studio.</p>
+    <h1>Content Admin</h1>
+    <p>Open the CMS to edit site copy, media, locations, FAQs, and footer content directly from the Git-backed content file.</p>
 
-    {error === 'invalid' && (
-      <div class="error">The username or password was incorrect.</div>
-    )}
+    <div class="actions">
+      <a class="primary-link" href="/admin/">Open CMS</a>
+      <a class="secondary-link" href="/" target="_blank" rel="noopener noreferrer">View Live Site</a>
+    </div>
 
-    {error === 'config' && (
-      <div class="error">Admin credentials are not configured on the server.</div>
-    )}
-
-    <form method="post" action="/api/admin-login">
-      <div class="field">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" autocomplete="username" required />
-      </div>
-
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required />
-      </div>
-
-      <button type="submit">Enter Admin</button>
-    </form>
-
-    <p class="note">You will be redirected to the content studio after a successful login.</p>
+    <p class="note">If this is your first time signing in, the CMS will prompt you through the Netlify Identity login flow before opening the editor.</p>
   </main>
 </body>
 </html>

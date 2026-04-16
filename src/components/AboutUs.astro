@@ -33,7 +33,7 @@ const { about } = siteData;
   </div>
 
   <div class="about-mobile container">
-    <div class="about-mobile-intro reveal-up">
+    <div class="about-mobile-intro">
       <p class="subtitle">{about.subtitle}</p>
       <h2>{about.title}</h2>
       <p>{about.description}</p>
@@ -41,7 +41,7 @@ const { about } = siteData;
 
     <div class="about-mobile-grid">
       {about.features.map((feature, i) => (
-        <article class="about-mobile-card reveal-up">
+        <article class="about-mobile-card">
           <span class="about-mobile-phase">0{i + 1} / Phase</span>
           <h3>{feature.title}</h3>
           <p>{feature.description}</p>
@@ -170,14 +170,19 @@ const { about } = siteData;
 
     .horizontal-section {
         padding: var(--section-py) 0;
+        overflow: visible;
     }
 
     .about-mobile {
         display: block;
+        position: relative;
+        z-index: 2;
     }
 
     .about-mobile-intro {
         margin-bottom: 2rem;
+        max-width: 100%;
+        animation: aboutMobileIntroIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .about-mobile-grid {
@@ -192,7 +197,13 @@ const { about } = siteData;
         border: 1px solid var(--clr-border);
         position: relative;
         overflow: hidden;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+        animation: aboutMobileCardIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
+
+    .about-mobile-card:nth-child(2) { animation-delay: 0.08s; }
+    .about-mobile-card:nth-child(3) { animation-delay: 0.16s; }
+    .about-mobile-card:nth-child(4) { animation-delay: 0.24s; }
 
     .about-mobile-card::before {
         content: '';
@@ -218,11 +229,38 @@ const { about } = siteData;
         font-size: 1.45rem;
         margin-bottom: 0.75rem;
     }
+
+    .about-mobile-card p,
+    .about-mobile-intro p {
+        max-width: 100%;
+    }
 }
 
 @media (min-width: 769px) {
     .about-mobile {
         display: none;
+    }
+}
+
+@keyframes aboutMobileIntroIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes aboutMobileCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 </style>

@@ -1,91 +1,74 @@
 # Subdomain Deployment & CMS Guide
 
-This guide covers the full process of deploying your **Royal Drive Investors Admin** portal to a live subdomain (e.g., `investors.royaldrive.com`), securing your backend, and transitioning your Keystatic CMS from Local Mode to Production (GitHub) Mode.
+This guide covers the clean Netlify deployment flow for the Royal Drive Investors site and its Decap CMS admin.
 
 ---
 
-## Step 1: Push Your Code to GitHub
-To deploy seamlessly, your code must live in a GitHub repository.
+## Step 1: Push the Project to GitHub
 
-1. Create a free account on [GitHub](https://github.com) if you haven't already.
-2. Create a new, **Private** repository (e.g., `royal-drive-investors-portal`).
-3. In your local terminal, run the following commands to push your project:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit prior to deployment"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME.git
-   git push -u origin main
-   ```
+1. Create a **private** GitHub repository.
+2. Push this project source to `main`.
+3. Confirm the repo contains the site source, `public/admin`, and `src/data/siteData.json`.
 
 ---
 
-## Step 2: Switch Astro for Vercel (Recommended)
-You are currently using the Node standalone server adapter (`@astrojs/node`). If you use **Vercel** (the best frictionless platform for Astro), you should swap the adapter so your site runs serverless.
+## Step 2: Import the Repo into Netlify
 
-1. Run this command in your terminal:
-   ```bash
-   npx astro add vercel
-   ```
-2. Accept all the default prompts. This will automatically update your `astro.config.mjs` to use `@astrojs/vercel/serverless` instead of `@astrojs/node`.
-
-> **Note:** If you choose DigitalOcean or Render, skip this step and keep the Node adapter.
-
----
-
-## Step 3: Upgrade Keystatic for Production
-Right now, Keystatic writes directly to your local computer (`src/data`). In a live cloud environment, local files are wiped when the server restarts. To solve this, Keystatic must interact directly with your GitHub repository.
-
-1. Open `keystatic.config.ts`.
-2. Find the top lines where `storage` is defined, and change it from `local` to `github`:
-
-**Before:**
-```typescript
-export default config({
-  storage: {
-    kind: 'local',
-  },
-  // ...
-```
-
-**After:**
-```typescript
-export default config({
-  storage: {
-    kind: 'github',
-    repo: 'YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME', // The exact formatting of your github repo
-  },
-  // ...
-```
-> ***Important***: Push this tiny `keystatic.config.ts` change to your GitHub repo so the cloud provider gets the latest version!
+1. In Netlify, choose **Add new project**.
+2. Select **Import an existing project**.
+3. Choose GitHub and select your repository.
+4. Use these build settings:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Base directory: leave blank
 
 ---
 
-## Step 4: Deploy to Vercel
-Now that your repo is on GitHub and configured properly for the cloud:
+## Step 3: Add Runtime Environment Variables
 
-1. Go to [Vercel](https://vercel.com) and sign in with your GitHub account.
-2. Click **"Add New Project"** and select your `royal-drive-investors-portal` repository.
-3. Open the **"Environment Variables"** dropdown before you hit deploy. Add the variables from your local `.env`:
-   - Name: `ADMIN_USERNAME`, Value: `your_admin_username`
-   - Name: `ADMIN_PASSWORD`, Value: `your_strong_admin_password`
-4. Click **Deploy**. Vercel will create a temporary URL for you (e.g., `royal-drive.vercel.app`).
+In Netlify, add the environment variables your site uses:
+
+- `PUBLIC_N8N_WEBHOOK_URL`
+
+If you are using a custom contact webhook, make sure the value is the full HTTPS URL.
 
 ---
 
-## Step 5: Connect the Subdomain (DNS Setup)
-Now to attach your custom subdomain `investors.royaldrive.com` to the Vercel site:
+## Step 4: Enable the CMS Auth Services
 
-1. In your **Vercel Dashboard**, go to the newly deployed project and click **Settings > Domains**.
-2. Type in your desired subdomain: `investors.royaldrive.com` and hit Add.
-3. Vercel will display an error saying it's not verified, and give you a **CNAME** or **A Record** configuration string.
-4. Open a new tab and go to your Domain Registrar (GoDaddy, Namecheap, Cloudflare, etc.) and navigate to your **DNS Management** table.
-5. Create a new record:
-   - **Type:** `CNAME`
-   - **Name (or Host):** `investors`
-   - **Value (or Target):** `cname.vercel-dns.com.` *(or whatever string Vercel provided you)*
-6. Save the DNS record. Vercel will automatically detect the changes within 5 to 30 minutes.
+This project now uses **Decap CMS** with the **Git Gateway** backend.
 
-### Success!
-Once Vercel gets the DNS signal, it automatically secures your site with an SSL certificate. You can now visit `https://investors.royaldrive.com/admin-control` and log in safely!
+In Netlify:
+
+1. Open **Identity** and enable Netlify Identity.
+2. Set registration to **Invite only** for a private editorial workflow.
+3. Under **Services**, enable **Git Gateway**.
+4. Invite the people who should be allowed to log into the CMS.
+
+Once enabled, Decap CMS will authenticate editors through Netlify Identity and commit content changes back to the Git repository.
+
+---
+
+## Step 5: Connect the Subdomain
+
+To attach your subdomain (for example `group.royaldrive.in`) to the Netlify site:
+
+1. Open **Domain management** in Netlify.
+2. Add the custom domain or subdomain.
+3. If Netlify asks you to verify ownership, add the TXT record it provides in your DNS host.
+4. Add or update the final DNS record Netlify provides, usually a `CNAME` for the subdomain.
+
+---
+
+## Step 6: Access the Admin
+
+After DNS and SSL are live:
+
+1. Visit `https://your-domain/admin-control`
+2. Click **Open CMS**
+3. Log in with the Netlify Identity invite you configured
+4. Edit the site content stored in `src/data/siteData.json`
+
+### Success
+
+Once the site is deployed and Identity + Git Gateway are enabled, the CMS will provide a friendlier editing experience without the extra GitHub App setup.
