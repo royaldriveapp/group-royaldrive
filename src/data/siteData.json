@@ -46,9 +46,6 @@
     "videoPoster": "/images/porsche.png"
   },
   "about": {
-    "subtitle": "Who We Are",
-    "title": "The Intersection of Passion & Performance.",
-    "description": "Royal Drive is a premier exotic and luxury auto dealership with a vertically integrated investment thesis. We acquire, recondition, and deploy high-value vehicles through an elite global network — turning physical assets into financial instruments.",
     "features": [
       {
         "icon": "fa-solid fa-gem",
@@ -61,11 +58,24 @@
         "description": "Our master technicians execute institutional-grade reconditioning, eliminating third-party margins and maximizing asset value."
       },
       {
+        "icon": "fa-solid fa-shield-halved",
+        "title": "Structured Risk Control",
+        "description": "Every vehicle is evaluated through strict buy-box discipline, documentation checks, and exit-price benchmarking before capital is deployed."
+      },
+      {
+        "icon": "fa-solid fa-chart-line",
+        "title": "Margin Optimization",
+        "description": "We combine pricing intelligence, service oversight, and timing discipline to improve realized spreads across each asset rotation."
+      },
+      {
         "icon": "fa-solid fa-globe",
         "title": "Global Distribution",
         "description": "An established network of collectors, dealerships, and auction houses ensures rapid, premium-priced asset deployment."
       }
-    ]
+    ],
+    "subtitle": "Who We Are",
+    "title": "The Intersection of Passion & Performance.",
+    "description": "Royal Drive is a premier exotic and luxury auto dealership with a vertically integrated investment thesis. We acquire, recondition, and deploy high-value vehicles through an elite global network — turning physical assets into financial instruments."
   },
   "whyInvest": {
     "subtitle": "Investment Thesis",
@@ -148,9 +158,6 @@
     ]
   },
   "faq": {
-    "subtitle": "Clarity & Transparency",
-    "title": "Investor FAQ",
-    "description": "Clarity and transparency are the bedrock of our fiduciary duty.",
     "items": [
       {
         "question": "What is the minimum investment?",
@@ -172,12 +179,12 @@
         "question": "What asset classes does Royal Drive focus on?",
         "answer": "We specialize exclusively in pre-owned exotic and luxury automobiles from marques such as Porsche, Ferrari, Lamborghini, McLaren, Aston Martin, and Bentley — vehicles with proven demand and collector appreciation."
       }
-    ]
+    ],
+    "subtitle": "Clarity & Transparency",
+    "title": "Investor FAQ",
+    "description": "Clarity and transparency are the bedrock of our fiduciary duty."
   },
   "contact": {
-    "subtitle": "Get Started",
-    "title": "Review the Prospectus.",
-    "description": "Initiate a private consultation with our principal team to explore current fund offerings and secure your allocation.",
     "allocationOptions": [
       {
         "value": "250k-500k",
@@ -195,39 +202,41 @@
         "value": "5m+",
         "label": "$5M+"
       }
-    ]
+    ],
+    "subtitle": "Get Started",
+    "title": "Review the Prospectus.",
+    "description": "Initiate a private consultation with our principal team to explore current fund offerings and secure your allocation."
   },
   "locations": {
-    "subtitle": "Visit Us",
-    "title": "Where to Find Us",
-    "description": "Experience the Royal Drive showroom in person and see our current inventory firsthand.",
     "offices": [
       {
         "city": "Dubai",
         "address": "Sheikh Zayed Road, Tower 3, Suite 1200",
         "region": "Dubai, UAE",
-        "phone": "+971 4 555 0100",
-        "email": "dubai@royaldrive.com",
+        "phone": "",
+        "email": "",
         "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.178!2d55.2708!3d25.2048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDEyJzE3LjMiTiA1NcKwMTYnMTQuOSJF!5e0!3m2!1sen!2sae!4v1"
       },
       {
         "city": "London",
         "address": "21 Berkeley Square, Mayfair",
         "region": "London W1J 6EQ, UK",
-        "phone": "+44 20 7946 0958",
-        "email": "london@royaldrive.com"
+        "phone": "",
+        "email": ""
       },
       {
         "city": "Miami",
         "address": "1200 Brickell Avenue, Suite 1950",
         "region": "Miami, FL 33131, USA",
-        "phone": "+1 (305) 555-0199",
-        "email": "miami@royaldrive.com"
+        "phone": "",
+        "email": ""
       }
-    ]
+    ],
+    "subtitle": "Visit Us",
+    "title": "Where to Find Us",
+    "description": "Experience the Royal Drive showroom in person and see our current inventory firsthand."
   },
   "footer": {
-    "tagline": "Accelerating wealth through tangible automotive assets.",
     "columns": [
       {
         "title": "Company",
@@ -294,6 +303,7 @@
         "icon": "fa-brands fa-instagram",
         "href": "#"
       }
-    ]
+    ],
+    "tagline": "Accelerating wealth through tangible automotive assets."
   }
 }

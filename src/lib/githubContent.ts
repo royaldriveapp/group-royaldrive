@@ -3,6 +3,11 @@ import { readFile, writeFile } from 'node:fs/promises';
 const CONTENT_PATH = 'src/data/siteData.json';
 const LOCAL_CONTENT_URL = new URL('../data/siteData.json', import.meta.url);
 
+// Bundled fallback for serverless environments:
+// Vercel may not include `src/data/siteData.json` at runtime for fs reads.
+// This import is resolved at build time, so admin UI can still load.
+import localSiteData from '../data/siteData.json';
+
 function processEnv() {
   // @ts-ignore
   return typeof process !== 'undefined' ? process.env : {};
@@ -45,14 +50,19 @@ function endpoint() {
 }
 
 export async function readContentFile() {
-  requirePersistentStorageInProd();
-
   if (!hasGitHubToken()) {
-    const raw = await readFile(LOCAL_CONTENT_URL, 'utf-8');
-    return {
-      sha: '',
-      data: JSON.parse(raw),
-    };
+    try {
+      const raw = await readFile(LOCAL_CONTENT_URL, 'utf-8');
+      return {
+        sha: '',
+        data: JSON.parse(raw),
+      };
+    } catch {
+      return {
+        sha: '',
+        data: localSiteData,
+      };
+    }
   }
 
   const { branch } = githubConfig();

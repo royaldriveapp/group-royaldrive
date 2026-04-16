@@ -1,0 +1,686 @@
+---
+interface Props {
+  csrfToken: string;
+}
+
+const { csrfToken } = Astro.props;
+---
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<div id="admin-editor-root" data-csrf={csrfToken} class="min-h-screen bg-[#1a1a1a] text-zinc-100">
+  <div class="mx-auto max-w-[1800px] px-4 py-4 md:px-6 md:py-6">
+    <div class="mb-4 flex flex-col gap-4 rounded-[28px] border border-white/8 bg-[#202020]/80 p-5 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4a853]">Royal Drive</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white md:text-5xl">Content Editor</h1>
+        <p class="mt-2 max-w-3xl text-sm text-zinc-400 md:text-base">Edit one section at a time, keep the layout wide, and save changes directly back to the site content source.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#242424] px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-[#2a2a2a]">
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#d4a853]"></i>
+          View site
+        </a>
+        <button id="logout-btn" type="button" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#242424] px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-[#2a2a2a]">
+          <i class="fa-solid fa-right-from-bracket text-xs text-[#d4a853]"></i>
+          Log out
+        </button>
+      </div>
+    </div>
+
+    <div id="status" class="mb-4 rounded-[24px] border border-white/8 bg-[#202020] px-5 py-4 text-sm text-zinc-400">Loading content…</div>
+    <div id="editor" class="min-h-[60vh]">Loading editor…</div>
+  </div>
+</div>
+
+<style is:global>
+  body {
+    margin: 0;
+    background: #1a1a1a;
+    color: #f4f4f5;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  }
+
+  .admin-status-error {
+    border-color: rgba(248, 113, 113, 0.28);
+    color: #fca5a5;
+  }
+
+  .admin-status-success {
+    border-color: rgba(212, 168, 83, 0.32);
+    color: #f7d07b;
+  }
+
+  .admin-glass {
+    background:
+      radial-gradient(circle at top right, rgba(212, 168, 83, 0.12), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
+      #242424;
+  }
+
+  .floating-field {
+    position: relative;
+  }
+
+  .floating-field input,
+  .floating-field textarea {
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #2e2e2e;
+    color: #fafafa;
+    padding: 24px 16px 12px;
+    font: inherit;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .floating-field textarea {
+    min-height: 132px;
+    resize: vertical;
+  }
+
+  .floating-field input::placeholder,
+  .floating-field textarea::placeholder {
+    color: #737373;
+  }
+
+  .floating-field input:focus,
+  .floating-field textarea:focus {
+    outline: none;
+    border-color: rgba(212, 168, 83, 0.8);
+    box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.14);
+  }
+
+  .floating-field label {
+    position: absolute;
+    left: 16px;
+    top: 11px;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a1a1aa;
+    pointer-events: none;
+  }
+
+  .accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 220ms ease;
+  }
+
+  .accordion-panel[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-panel > div {
+    overflow: hidden;
+  }
+
+  .section-scroller::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .section-scroller::-webkit-scrollbar-thumb {
+    background: rgba(212, 168, 83, 0.28);
+    border-radius: 999px;
+  }
+
+  .admin-card-hover {
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .admin-card-hover:hover {
+    transform: translateY(-1px);
+    border-color: rgba(212, 168, 83, 0.24);
+  }
+
+  @media (max-width: 1023px) {
+    .mobile-tabbar {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 6px;
+    }
+  }
+</style>
+
+<script is:inline>
+  const rootEl = document.getElementById('admin-editor-root');
+  const csrfTokenValue = rootEl?.dataset?.csrf || '';
+  const statusEl = document.getElementById('status');
+  const editorEl = document.getElementById('editor');
+
+  const sectionMeta = [
+    { key: 'site', label: 'Site', icon: 'fa-solid fa-swatchbook' },
+    { key: 'navigation', label: 'Navigation', icon: 'fa-solid fa-bars-staggered' },
+    { key: 'hero', label: 'Hero', icon: 'fa-solid fa-star' },
+    { key: 'about', label: 'About', icon: 'fa-solid fa-gem' },
+    { key: 'whyInvest', label: 'Why Invest', icon: 'fa-solid fa-chart-line' },
+    { key: 'faq', label: 'FAQ', icon: 'fa-solid fa-circle-question' },
+    { key: 'contact', label: 'Contact', icon: 'fa-solid fa-envelope-open-text' },
+    { key: 'locations', label: 'Locations', icon: 'fa-solid fa-location-dot' },
+    { key: 'footer', label: 'Footer', icon: 'fa-solid fa-shield-halved' }
+  ];
+
+  const state = {
+    content: null,
+    activeSection: 'site',
+    openPanels: new Set(),
+    savePending: false
+  };
+
+  function setStatus(message, tone = '') {
+    statusEl.textContent = message;
+    statusEl.className = `mb-4 rounded-[24px] border border-white/8 bg-[#202020] px-5 py-4 text-sm ${tone ? `admin-status-${tone}` : 'text-zinc-400'}`;
+  }
+
+  function titleize(value) {
+    return value
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/[_-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/^./, (match) => match.toUpperCase());
+  }
+
+  function isPlainObject(value) {
+    return Object.prototype.toString.call(value) === '[object Object]';
+  }
+
+  function isTextareaField(key, value) {
+    return typeof value === 'string' && (
+      value.length > 110 ||
+      value.includes('\n') ||
+      /description|answer|copyright|address|map|embed/i.test(key)
+    );
+  }
+
+  function fieldCount(value) {
+    if (Array.isArray(value)) {
+      return value.length;
+    }
+
+    if (isPlainObject(value)) {
+      return Object.keys(value).length;
+    }
+
+    return 1;
+  }
+
+  function sectionIcon(key) {
+    return sectionMeta.find((item) => item.key === key)?.icon || 'fa-solid fa-circle';
+  }
+
+  function itemTitle(item, label, index) {
+    if (isPlainObject(item)) {
+      return item.title || item.label || item.question || item.city || item.phase || `${label} ${index + 1}`;
+    }
+
+    return `${label} ${index + 1}`;
+  }
+
+  function blankFromTemplate(template) {
+    if (Array.isArray(template)) return [];
+    if (isPlainObject(template)) {
+      return Object.fromEntries(Object.entries(template).map(([key, value]) => [key, blankFromTemplate(value)]));
+    }
+    return '';
+  }
+
+  function parsePath(path) {
+    return path.split('.').map((segment) => /^\d+$/.test(segment) ? Number(segment) : segment);
+  }
+
+  function getValueByPath(root, path) {
+    return parsePath(path).reduce((acc, key) => acc?.[key], root);
+  }
+
+  function setValueByPath(root, path, nextValue) {
+    const tokens = parsePath(path);
+    const finalKey = tokens.pop();
+    const parent = tokens.reduce((acc, key) => acc[key], root);
+    parent[finalKey] = nextValue;
+  }
+
+  function removeArrayItem(path, index) {
+    const items = getValueByPath(state.content, path);
+    items.splice(index, 1);
+  }
+
+  function moveArrayItem(path, index, direction) {
+    const items = getValueByPath(state.content, path);
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= items.length) return;
+    const [item] = items.splice(index, 1);
+    items.splice(nextIndex, 0, item);
+  }
+
+  function renderField(path, label, value, options = {}) {
+    const wide = options.wide ? 'md:col-span-2 xl:col-span-3' : '';
+    const inputClass = `floating-field ${wide}`.trim();
+    const placeholder = `Update ${label.toLowerCase()}`;
+
+    if (isTextareaField(label, value)) {
+      return `
+        <div class="${inputClass}">
+          <label for="${path}">${label}</label>
+          <textarea id="${path}" data-field="${path}" placeholder="${placeholder}">${value ?? ''}</textarea>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="${inputClass}">
+        <label for="${path}">${label}</label>
+        <input id="${path}" data-field="${path}" value="${escapeHtml(String(value ?? ''))}" placeholder="${placeholder}" />
+      </div>
+    `;
+  }
+
+  function renderIconPreview(path, iconValue) {
+    return `
+      <div class="rounded-[22px] border border-white/8 bg-[#1f1f1f] p-4">
+        <div class="mb-3 flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2a2a2a] text-[#d4a853] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]">
+            <i class="${escapeHtml(iconValue || 'fa-solid fa-star')} text-lg"></i>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-[0.24em] text-zinc-500">Icon Preview</p>
+            <p class="mt-1 text-sm text-zinc-300">${escapeHtml(iconValue || 'fa-solid fa-star')}</p>
+          </div>
+        </div>
+        ${renderField(path, 'Icon', iconValue || '')}
+      </div>
+    `;
+  }
+
+  function renderObjectFields(basePath, obj) {
+    return Object.entries(obj).map(([key, value]) => {
+      const path = `${basePath}.${key}`;
+
+      if (key === 'icon') {
+        return renderIconPreview(path, value);
+      }
+
+      return renderField(path, titleize(key), value, {
+        wide: isTextareaField(key, value) || key.toLowerCase().includes('title') || key.toLowerCase().includes('description')
+      });
+    }).join('');
+  }
+
+  function renderNestedObjectCard(path, key, obj) {
+    return `
+      <section class="admin-glass rounded-[26px] border border-white/8 p-5 shadow-[0_24px_60px_rgba(0,0,0,0.24)]">
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-500">Nested Block</p>
+            <h3 class="mt-1 text-lg font-semibold text-white">${titleize(key)}</h3>
+          </div>
+          <span class="rounded-full border border-white/8 bg-[#2a2a2a] px-3 py-1 text-xs font-medium text-zinc-300">${fieldCount(obj)} fields</span>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          ${renderObjectFields(path, obj)}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderArrayItems(path, key, items) {
+    const label = titleize(key).replace(/s$/, '');
+
+    const cards = items.map((item, index) => {
+      const panelId = `${path}.${index}`;
+      const open = state.openPanels.has(panelId) ? 'true' : 'false';
+      const preview = itemTitle(item, label, index);
+
+      const body = isPlainObject(item)
+        ? renderObjectFields(panelId, item)
+        : renderField(panelId, label, item, { wide: true });
+
+      return `
+        <article class="admin-card-hover overflow-hidden rounded-[24px] border border-white/8 bg-[#242424] shadow-[0_18px_44px_rgba(0,0,0,0.22)]">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/8 bg-[#2b2b2b] text-zinc-500">
+              <i class="fa-solid fa-grip-vertical"></i>
+            </div>
+            <button type="button" class="flex min-w-0 flex-1 items-center justify-between gap-4 text-left" data-toggle-panel="${panelId}">
+              <div class="min-w-0">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-zinc-500">${label} ${index + 1}</p>
+                <p class="mt-1 truncate text-sm font-medium text-white">${escapeHtml(preview)}</p>
+              </div>
+              <span class="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 bg-[#2c2c2c] text-zinc-300 transition ${open === 'true' ? 'rotate-180' : ''}">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </span>
+            </button>
+          </div>
+
+          <div class="border-t border-white/6 px-4 py-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" class="rounded-full border border-white/8 bg-[#2a2a2a] px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:border-white/18 hover:bg-[#303030]" data-move-item="${path}" data-index="${index}" data-direction="-1">
+                <i class="fa-solid fa-arrow-up mr-2"></i>Move up
+              </button>
+              <button type="button" class="rounded-full border border-white/8 bg-[#2a2a2a] px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:border-white/18 hover:bg-[#303030]" data-move-item="${path}" data-index="${index}" data-direction="1">
+                <i class="fa-solid fa-arrow-down mr-2"></i>Move down
+              </button>
+              <button type="button" class="rounded-full border border-red-400/20 bg-red-500/8 px-3 py-2 text-xs font-semibold text-red-300 transition hover:border-red-400/35 hover:bg-red-500/12" data-remove-item="${path}" data-index="${index}">
+                <i class="fa-solid fa-trash-can mr-2"></i>Remove
+              </button>
+            </div>
+          </div>
+
+          <div class="accordion-panel" data-open="${open}">
+            <div>
+              <div class="grid gap-4 border-t border-white/6 px-4 pb-4 pt-4 md:grid-cols-2 xl:grid-cols-3">
+                ${body}
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    return `
+      <section class="admin-glass rounded-[26px] border border-white/8 p-5 shadow-[0_24px_60px_rgba(0,0,0,0.24)]">
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-500">Repeatable Group</p>
+            <h3 class="mt-1 text-lg font-semibold text-white">${titleize(key)}</h3>
+          </div>
+          <span class="rounded-full border border-white/8 bg-[#2a2a2a] px-3 py-1 text-xs font-medium text-zinc-300">${items.length} items</span>
+        </div>
+        <div class="space-y-4">
+          ${cards}
+          <button type="button" data-add-item="${path}" class="flex w-full items-center justify-center gap-3 rounded-[24px] border border-dashed border-[#d4a853]/40 bg-[#25211a] px-5 py-5 text-sm font-semibold text-[#f6d68e] transition hover:border-[#d4a853]/70 hover:bg-[#2a241b]">
+            <i class="fa-solid fa-plus"></i>
+            Add ${label}
+          </button>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderSection(sectionKey) {
+    const section = state.content?.[sectionKey];
+    if (!section || !isPlainObject(section)) {
+      return '<div class="rounded-[26px] border border-white/8 bg-[#242424] p-6 text-zinc-400">Nothing to edit in this section yet.</div>';
+    }
+
+    const primitives = [];
+    const nestedObjects = [];
+    const arrays = [];
+
+    for (const [key, value] of Object.entries(section)) {
+      if (Array.isArray(value)) {
+        arrays.push([key, value]);
+      } else if (isPlainObject(value)) {
+        nestedObjects.push([key, value]);
+      } else {
+        primitives.push([key, value]);
+      }
+    }
+
+    const fieldsCard = primitives.length ? `
+      <section class="admin-glass rounded-[26px] border border-white/8 p-5 shadow-[0_24px_60px_rgba(0,0,0,0.24)]">
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-500">Primary Fields</p>
+            <h3 class="mt-1 text-lg font-semibold text-white">${titleize(sectionKey)} content</h3>
+          </div>
+          <span class="rounded-full border border-white/8 bg-[#2a2a2a] px-3 py-1 text-xs font-medium text-zinc-300">${primitives.length} fields</span>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          ${primitives.map(([key, value]) => renderField(
+            `${sectionKey}.${key}`,
+            titleize(key),
+            value,
+            { wide: isTextareaField(key, value) || /title|description|copyright/i.test(key) }
+          )).join('')}
+        </div>
+      </section>
+    ` : '';
+
+    const nestedMarkup = nestedObjects.map(([key, value]) => renderNestedObjectCard(`${sectionKey}.${key}`, key, value)).join('');
+    const arrayMarkup = arrays.map(([key, value]) => renderArrayItems(`${sectionKey}.${key}`, key, value)).join('');
+
+    return `
+      <div class="space-y-5">
+        ${fieldsCard}
+        ${nestedMarkup}
+        ${arrayMarkup}
+      </div>
+    `;
+  }
+
+  function renderNavigation() {
+    return sectionMeta.map((item) => {
+      const active = item.key === state.activeSection;
+      return `
+        <button
+          type="button"
+          data-section="${item.key}"
+          class="group relative flex min-w-[160px] items-center gap-3 rounded-[18px] border px-4 py-4 text-left transition ${active
+            ? 'border-[#d4a853]/40 bg-[#2a241b] text-white shadow-[inset_3px_0_0_0_#d4a853]'
+            : 'border-transparent bg-transparent text-zinc-300 hover:border-white/8 hover:bg-[#262626]'}"
+        >
+          <span class="flex h-10 w-10 items-center justify-center rounded-2xl ${active ? 'bg-[#d4a853]/16 text-[#d4a853]' : 'bg-[#2b2b2b] text-zinc-500'}">
+            <i class="${item.icon}"></i>
+          </span>
+          <span class="flex-1">
+            <span class="block text-sm font-semibold">${item.label}</span>
+            <span class="mt-1 block text-xs ${active ? 'text-[#f2d79b]' : 'text-zinc-500'}">${fieldCount(state.content?.[item.key] || {})} items</span>
+          </span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function renderEditor() {
+    const activeMeta = sectionMeta.find((item) => item.key === state.activeSection) || sectionMeta[0];
+    const activeData = state.content?.[state.activeSection] || {};
+
+    editorEl.innerHTML = `
+      <div class="grid gap-5 xl:grid-cols-[240px_minmax(0,1fr)]">
+        <aside class="mobile-tabbar section-scroller overflow-x-auto xl:sticky xl:top-6 xl:h-fit xl:overflow-visible">
+          <div class="rounded-[28px] border border-white/8 bg-[#202020] p-3 shadow-[0_28px_68px_rgba(0,0,0,0.28)]">
+            <div class="mb-3 hidden px-2 xl:block">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">Sections</p>
+            </div>
+            <div class="flex gap-2 xl:grid xl:gap-2">
+              ${renderNavigation()}
+            </div>
+          </div>
+        </aside>
+
+        <main class="min-w-0 pb-28">
+          <section class="admin-glass rounded-[30px] border border-white/8 p-5 shadow-[0_28px_68px_rgba(0,0,0,0.28)] md:p-7">
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">Selected section</p>
+                <div class="mt-2 flex items-center gap-3">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#d4a853]/16 text-[#d4a853]">
+                    <i class="${activeMeta.icon} text-lg"></i>
+                  </div>
+                  <div>
+                    <h2 class="text-2xl font-semibold tracking-[-0.03em] text-white md:text-3xl">${activeMeta.label}</h2>
+                    <p class="mt-1 text-sm text-zinc-400">Clean, wide editing for the ${activeMeta.label.toLowerCase()} section.</p>
+                  </div>
+                </div>
+              </div>
+              <span class="inline-flex h-fit items-center rounded-full border border-[#d4a853]/30 bg-[#2a241b] px-4 py-2 text-sm font-semibold text-[#f2d79b]">${fieldCount(activeData)} fields</span>
+            </div>
+            ${renderSection(state.activeSection)}
+          </section>
+        </main>
+      </div>
+
+      <div class="fixed bottom-5 right-5 z-20">
+        <button id="save-btn" type="button" class="rounded-full bg-[#d4a853] px-7 py-4 text-sm font-semibold text-[#1b1b1b] shadow-[0_18px_40px_rgba(212,168,83,0.34)] transition hover:translate-y-[-1px] hover:bg-[#e0b565] disabled:cursor-not-allowed disabled:opacity-60">
+          <i class="fa-solid fa-floppy-disk mr-2"></i>
+          Save Changes
+        </button>
+      </div>
+    `;
+  }
+
+  function escapeHtml(value) {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function bindEvents() {
+    editorEl.querySelectorAll('[data-section]').forEach((button) => {
+      button.addEventListener('click', () => {
+        state.activeSection = button.dataset.section;
+        renderEditor();
+        bindEvents();
+      });
+    });
+
+    editorEl.querySelectorAll('[data-field]').forEach((input) => {
+      input.addEventListener('input', (event) => {
+        setValueByPath(state.content, event.target.dataset.field, event.target.value);
+        setStatus('Unsaved changes.', 'success');
+      });
+    });
+
+    editorEl.querySelectorAll('[data-toggle-panel]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const panel = button.dataset.togglePanel;
+        if (state.openPanels.has(panel)) {
+          state.openPanels.delete(panel);
+        } else {
+          state.openPanels.add(panel);
+        }
+        renderEditor();
+        bindEvents();
+      });
+    });
+
+    editorEl.querySelectorAll('[data-add-item]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const path = button.dataset.addItem;
+        const items = getValueByPath(state.content, path);
+        const template = items[0] ?? '';
+        items.push(blankFromTemplate(template));
+        const panelId = `${path}.${items.length - 1}`;
+        state.openPanels.add(panelId);
+        setStatus('New item added. Fill in the details and save when ready.', 'success');
+        renderEditor();
+        bindEvents();
+      });
+    });
+
+    editorEl.querySelectorAll('[data-remove-item]').forEach((button) => {
+      button.addEventListener('click', () => {
+        removeArrayItem(button.dataset.removeItem, Number(button.dataset.index));
+        setStatus('Item removed. Save to persist the change.', 'success');
+        renderEditor();
+        bindEvents();
+      });
+    });
+
+    editorEl.querySelectorAll('[data-move-item]').forEach((button) => {
+      button.addEventListener('click', () => {
+        moveArrayItem(
+          button.dataset.moveItem,
+          Number(button.dataset.index),
+          Number(button.dataset.direction)
+        );
+        setStatus('Item order updated. Save to persist the new layout.', 'success');
+        renderEditor();
+        bindEvents();
+      });
+    });
+
+    const saveBtn = document.getElementById('save-btn');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', saveContent);
+    }
+  }
+
+  async function saveContent() {
+    if (state.savePending) return;
+    state.savePending = true;
+    setStatus('Saving changes…');
+
+    try {
+      const response = await fetch('/api/admin-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfTokenValue
+        },
+        body: JSON.stringify(state.content)
+      });
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Save failed.');
+      }
+
+      setStatus('Changes saved successfully. Your live site will pick them up on the next deployment.', 'success');
+    } catch (error) {
+      setStatus(error.message || 'Unable to save content.', 'error');
+    } finally {
+      state.savePending = false;
+    }
+  }
+
+  async function init() {
+    try {
+      const response = await fetch('/api/admin-content');
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !payload) {
+        throw new Error(payload?.error || 'Unable to load content.');
+      }
+
+      state.content = payload;
+      setStatus('Content loaded. Choose a section on the left and edit without the layout fighting you.');
+      renderEditor();
+      bindEvents();
+    } catch (error) {
+      editorEl.innerHTML = `
+        <div class="rounded-[28px] border border-red-400/20 bg-red-500/8 p-6 text-red-200">
+          <h2 class="text-xl font-semibold text-white">Load failed</h2>
+          <p class="mt-2 text-sm text-red-200/90">${escapeHtml(error.message || 'Unable to load content.')}</p>
+        </div>
+      `;
+      setStatus(error.message || 'Unable to load content.', 'error');
+    }
+  }
+
+  init();
+
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      setStatus('Logging out…');
+      try {
+        const response = await fetch('/api/admin-logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfTokenValue
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Logout failed.');
+        }
+        window.location.href = '/admin-control';
+      } catch (error) {
+        setStatus(error?.message || 'Unable to log out.', 'error');
+      }
+    });
+  }
+</script>
