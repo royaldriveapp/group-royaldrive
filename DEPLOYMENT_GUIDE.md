@@ -1,6 +1,6 @@
-# Subdomain Deployment & CMS Guide
+# Subdomain Deployment & Admin Guide
 
-This guide covers the clean Netlify deployment flow for the Royal Drive Investors site and its Decap CMS admin.
+This guide covers the Netlify deployment flow for the Royal Drive Investors site and its built-in content admin.
 
 ---
 
@@ -8,7 +8,7 @@ This guide covers the clean Netlify deployment flow for the Royal Drive Investor
 
 1. Create a **private** GitHub repository.
 2. Push this project source to `main`.
-3. Confirm the repo contains the site source, `public/admin`, and `src/data/siteData.json`.
+3. Confirm the repo contains the site source and `src/data/siteData.json`.
 
 ---
 
@@ -29,27 +29,22 @@ This guide covers the clean Netlify deployment flow for the Royal Drive Investor
 In Netlify, add the environment variables your site uses:
 
 - `PUBLIC_N8N_WEBHOOK_URL`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `GITHUB_TOKEN`
+- `GITHUB_REPO`
+- `GITHUB_BRANCH`
 
-If you are using a custom contact webhook, make sure the value is the full HTTPS URL.
+Recommended values:
 
----
+- `GITHUB_REPO=marketing-it/group.royaldrive`
+- `GITHUB_BRANCH=main`
 
-## Step 4: Enable the CMS Auth Services
-
-This project now uses **Decap CMS** with the **Git Gateway** backend.
-
-In Netlify:
-
-1. Open **Identity** and enable Netlify Identity.
-2. Set registration to **Invite only** for a private editorial workflow.
-3. Under **Services**, enable **Git Gateway**.
-4. Invite the people who should be allowed to log into the CMS.
-
-Once enabled, Decap CMS will authenticate editors through Netlify Identity and commit content changes back to the Git repository.
+The `GITHUB_TOKEN` must have permission to update repository contents.
 
 ---
 
-## Step 5: Connect the Subdomain
+## Step 4: Connect the Subdomain
 
 To attach your subdomain (for example `group.royaldrive.in`) to the Netlify site:
 
@@ -60,15 +55,15 @@ To attach your subdomain (for example `group.royaldrive.in`) to the Netlify site
 
 ---
 
-## Step 6: Access the Admin
+## Step 5: Access the Admin
 
 After DNS and SSL are live:
 
 1. Visit `https://your-domain/admin-control`
-2. Click **Open CMS**
-3. Log in with the Netlify Identity invite you configured
-4. Edit the site content stored in `src/data/siteData.json`
+2. Log in with the admin username and password you configured
+3. Edit the site content stored in `src/data/siteData.json`
+4. Save the changes to commit them back to GitHub and trigger a redeploy
 
 ### Success
 
-Once the site is deployed and Identity + Git Gateway are enabled, the CMS will provide a friendlier editing experience without the extra GitHub App setup.
+Once the site is deployed and the admin secrets are configured, editors can log in at `/admin-control`, update the content, and trigger a normal Git-backed redeploy without any extra CMS service.
