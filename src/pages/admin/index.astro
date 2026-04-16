@@ -375,7 +375,13 @@ if (!isAuthorized(Astro)) {
         });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error || 'Save failed.');
-        setStatus('Content saved successfully.', 'success');
+        const deployTriggered = Boolean(payload?.deployResult?.triggered);
+        setStatus(
+          deployTriggered
+            ? 'Content saved and redeploy triggered. Live site should update in a minute or two.'
+            : 'Content saved. Set NETLIFY_BUILD_HOOK_URL to auto-trigger a redeploy.',
+          'success'
+        );
       } catch (error) {
         setStatus(error.message || 'Unable to save content.', 'error');
       }

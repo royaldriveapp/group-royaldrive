@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly GITHUB_TOKEN?: string;
   readonly GITHUB_REPO?: string;
   readonly GITHUB_BRANCH?: string;
+  readonly NETLIFY_BUILD_HOOK_URL?: string;
   readonly PUBLIC_N8N_WEBHOOK_URL?: string;
 }
 

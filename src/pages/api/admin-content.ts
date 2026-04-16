@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getAdminCredentials } from '../../lib/adminAuth';
 import { readContentFile, writeContentFile } from '../../lib/githubContent';
+import { triggerDeployHook } from '../../lib/deployHook';
 
 export const GET: APIRoute = async () => {
   try {
@@ -21,8 +22,10 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { username } = getAdminCredentials();
-    await writeContentFile(body, username || 'admin');
-    return new Response(JSON.stringify({ ok: true }), {
+    const saveResult = await writeContentFile(body, username || 'admin');
+    const deployResult = await triggerDeployHook();
+
+    return new Response(JSON.stringify({ ok: true, saveResult, deployResult }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
