@@ -294,6 +294,8 @@ p {
   letter-spacing: 3px;
   font-weight: 700;
   text-transform: uppercase;
+  color: var(--clr-text);
+  transition: color 0.25s ease, text-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .logo .brand-accent {
@@ -301,6 +303,17 @@ p {
   font-weight: 400;
   font-size: 0.85rem;
   letter-spacing: 2px;
+  transition: color 0.25s ease;
+}
+
+.logo:hover {
+  color: var(--clr-gold-light);
+  text-shadow: 0 0 18px rgba(201, 168, 76, 0.35);
+  filter: drop-shadow(0 0 14px rgba(201, 168, 76, 0.15));
+}
+
+.logo:hover .brand-accent {
+  color: var(--clr-gold);
 }
 
 .nav-links {
@@ -314,7 +327,7 @@ p {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   position: relative;
-  transition: color 0.3s ease;
+  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
   color: var(--clr-text-muted);
 }
 
@@ -330,7 +343,9 @@ p {
 }
 
 .nav-links a:hover {
-  color: var(--clr-text);
+  color: var(--clr-gold-light);
+  text-shadow: 0 0 14px rgba(201, 168, 76, 0.35);
+  transform: translateY(-1px);
 }
 
 .nav-links a:hover::after { width: 100%; }
@@ -352,6 +367,11 @@ p {
   background: var(--clr-text);
   transition: var(--transition);
   transform-origin: center;
+}
+
+.menu-toggle:hover span {
+  background: var(--clr-gold-light);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
 }
 
 .menu-toggle.active span:nth-child(1) {
