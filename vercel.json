@@ -5,6 +5,10 @@
     {
       "source": "/investors",
       "destination": "/"
+    },
+    {
+      "source": "/investment",
+      "destination": "/"
     }
   ]
 }
