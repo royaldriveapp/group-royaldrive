@@ -48,29 +48,29 @@
   "about": {
     "features": [
       {
-        "icon": "fa-solid fa-gem",
-        "title": "Curated Acquisitions",
-        "description": "We source only the most sought-after marques — Porsche, Ferrari, Lamborghini, McLaren — through proprietary off-market deal flow."
+        "icon": "fa-solid fa-car-side",
+        "title": "Royal Drive Luxury",
+        "description": "RD Luxury is a high-margin platform that treats elite marques like Porsche, Ferrari, and Lamborghini as investment-grade assets. The division ensures factory-standard excellence through a rigorous 400+ checkpoint inspection, guaranteeing structural integrity for every vehicle. It provides High-Net-Worth Individuals with a secure, lifestyle-oriented ecosystem for acquiring high-value exotic automobile"
       },
       {
         "icon": "fa-solid fa-wrench",
-        "title": "In-House Excellence",
-        "description": "Our master technicians execute institutional-grade reconditioning, eliminating third-party margins and maximizing asset value."
+        "title": "Royal Drive Smart",
+        "description": "Serving as the ecosystem’s high-volume engine, RD Smart is the first systemized platform for the premium non-luxury segment, featuring brands like Toyota, Kia, and Volkswagen. It addresses the market’s trust deficit via mandatory 400+ checkpoint audits, ensuring peak mechanical performance. This vertical creates a scalable customer funnel, priming premium aspirants for future upgrades into the luxury tier."
       },
       {
         "icon": "fa-solid fa-shield-halved",
-        "title": "Structured Risk Control",
-        "description": "Every vehicle is evaluated through strict buy-box discipline, documentation checks, and exit-price benchmarking before capital is deployed."
+        "title": "Royal Drive Care",
+        "description": "RD Care is a high-margin service engine managing the vehicle lifecycle through specialized restoration, facelifting, and advanced diagnostics. Operating on a Repair Over Replacement philosophy, it provides premium detailing and 24/7 roadside assistance to ensure long-term asset value. This division functions as a scalable recurring revenue stream that maintains the functional integrity of the entire Royal Drive portfolio."
       },
       {
         "icon": "fa-solid fa-chart-line",
-        "title": "Margin Optimization",
-        "description": "We combine pricing intelligence, service oversight, and timing discipline to improve realized spreads across each asset rotation."
+        "title": "Royal Drive Logistics",
+        "description": "Royal Drive Logistics is the high-security transportation arm of the company, utilizing a proprietary fleet of covered flatbed transporters to provide \"zero-wear\" relocation for exotic cars and motorcycles. By protecting assets from road debris, weather, and unauthorized mileage, the division ensures every vehicle remains in showroom condition during transit between owners and service centers"
       },
       {
         "icon": "fa-solid fa-globe",
-        "title": "Global Distribution",
-        "description": "An established network of collectors, dealerships, and auction houses ensures rapid, premium-priced asset deployment."
+        "title": "Royal Drive Café",
+        "description": "RD Cafe is the ecosystem's lifestyle vertical, functioning as a premium social hub for HNIs and automotive enthusiasts. By blending luxury amenities with private consultation spaces, it serves as an experiential marketing tool that builds community and deepens brand loyalty. This replicable model strengthens the brand’s elite identity and provides a sophisticated engagement platform to support national expansion."
       }
     ],
     "subtitle": "Who We Are",
