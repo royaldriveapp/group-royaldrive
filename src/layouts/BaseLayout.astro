@@ -41,37 +41,6 @@ const {
   <slot />
   <div data-chat-widget data-widget-id="69e1f01468322596ac70ce56" data-location-id="s2PduY2ugBQk7J9jRp5V"></div>
   <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="69e1f01468322596ac70ce56"></script>
-  <script is:inline>
-    const syncLeadConnectorDialCodes = () => {
-      document.querySelectorAll('.iti__selected-flag').forEach((flag) => {
-        let dialCode = flag.querySelector('.rd-dial-code');
-        if (!dialCode) {
-          dialCode = document.createElement('span');
-          dialCode.className = 'rd-dial-code';
-          const arrow = flag.querySelector('.iti__arrow');
-          flag.insertBefore(dialCode, arrow || null);
-        }
-
-        const title = flag.getAttribute('title') || '';
-        const match = title.match(/(\+\d+)/);
-        dialCode.textContent = match ? match[1] : '';
-      });
-    };
-
-    const leadConnectorObserver = new MutationObserver(() => {
-      syncLeadConnectorDialCodes();
-    });
-
-    window.addEventListener('load', () => {
-      syncLeadConnectorDialCodes();
-      leadConnectorObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['title', 'class']
-      });
-    });
-  </script>
 
 </body>
 </html>
