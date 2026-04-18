@@ -157,6 +157,38 @@
       }
     ]
   },
+  "verticalsTimeline": {
+    "subtitle": "Royal Drive Verticals",
+    "title": "A Diversified Growth Ecosystem.",
+    "description": "Royal Drive is more than a dealership. It is an expanding ecosystem built across multiple revenue-generating verticals, designed to strengthen brand equity, deepen customer trust, and create scalable long-term growth.",
+    "items": [
+      {
+        "title": "Luxury Cars",
+        "description": "Our flagship vertical focuses on high-value pre-owned luxury and exotic vehicles, driving premium brand positioning and strong-margin transactions.",
+        "icon": "fa-solid fa-car-side"
+      },
+      {
+        "title": "Budget Cars",
+        "description": "A wider-access segment that supports volume, consistent cash flow, and broader market penetration across different buyer categories.",
+        "icon": "fa-solid fa-road"
+      },
+      {
+        "title": "Detailing Services",
+        "description": "Professional detailing and reconditioning strengthen customer lifetime value while adding recurring service revenue to the business model.",
+        "icon": "fa-solid fa-spray-can-sparkles"
+      },
+      {
+        "title": "RD Cafe",
+        "description": "A lifestyle extension that deepens community, increases footfall, and turns the brand into an experience, not just a transaction point.",
+        "icon": "fa-solid fa-mug-hot"
+      },
+      {
+        "title": "Brand Expansion",
+        "description": "Each vertical supports the next, creating a reputation-driven ecosystem with stronger visibility, stickier customers, and scalable investor upside.",
+        "icon": "fa-solid fa-arrow-trend-up"
+      }
+    ]
+  },
   "faq": {
     "items": [
       {
