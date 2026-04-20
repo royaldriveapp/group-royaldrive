@@ -165,6 +165,7 @@ const { csrfToken } = Astro.props;
     { key: 'faq', label: 'FAQ', icon: 'fa-solid fa-circle-question' },
     { key: 'contact', label: 'Contact', icon: 'fa-solid fa-envelope-open-text' },
     { key: 'locations', label: 'Locations', icon: 'fa-solid fa-location-dot' },
+    { key: 'socials', label: 'Socials', icon: 'fa-brands fa-instagram', path: 'footer.socials' },
     { key: 'footer', label: 'Footer', icon: 'fa-solid fa-shield-halved' }
   ];
 
@@ -215,6 +216,14 @@ const { csrfToken } = Astro.props;
 
   function sectionIcon(key) {
     return sectionMeta.find((item) => item.key === key)?.icon || 'fa-solid fa-circle';
+  }
+
+  function sectionPath(key) {
+    return sectionMeta.find((item) => item.key === key)?.path || key;
+  }
+
+  function getSectionValue(key) {
+    return getValueByPath(state.content, sectionPath(key));
   }
 
   function itemTitle(item, label, index) {
@@ -406,7 +415,12 @@ const { csrfToken } = Astro.props;
   }
 
   function renderSection(sectionKey) {
-    const section = state.content?.[sectionKey];
+    const section = getSectionValue(sectionKey);
+
+    if (Array.isArray(section)) {
+      return renderArrayItems(sectionPath(sectionKey), sectionKey, section);
+    }
+
     if (!section || !isPlainObject(section)) {
       return '<div class="rounded-[26px] border border-white/8 bg-[#242424] p-6 text-zinc-400">Nothing to edit in this section yet.</div>';
     }
@@ -460,6 +474,7 @@ const { csrfToken } = Astro.props;
   function renderNavigation() {
     return sectionMeta.map((item) => {
       const active = item.key === state.activeSection;
+      const countValue = getSectionValue(item.key);
       return `
         <button
           type="button"
@@ -473,7 +488,7 @@ const { csrfToken } = Astro.props;
           </span>
           <span class="flex-1">
             <span class="block text-sm font-semibold">${item.label}</span>
-            <span class="mt-1 block text-xs ${active ? 'text-[#f2d79b]' : 'text-zinc-500'}">${fieldCount(state.content?.[item.key] || {})} items</span>
+            <span class="mt-1 block text-xs ${active ? 'text-[#f2d79b]' : 'text-zinc-500'}">${fieldCount(countValue || {})} items</span>
           </span>
         </button>
       `;
@@ -482,7 +497,7 @@ const { csrfToken } = Astro.props;
 
   function renderEditor() {
     const activeMeta = sectionMeta.find((item) => item.key === state.activeSection) || sectionMeta[0];
-    const activeData = state.content?.[state.activeSection] || {};
+    const activeData = getSectionValue(state.activeSection) || {};
 
     editorEl.innerHTML = `
       <div class="grid gap-5 xl:grid-cols-[240px_minmax(0,1fr)]">
