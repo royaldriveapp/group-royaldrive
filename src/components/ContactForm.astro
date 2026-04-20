@@ -1,7 +1,7 @@
 ---
 /**
  * ContactForm Component
- * Investor inquiry form — captures name, email, phone, allocation size, and message.
+ * Investor inquiry form — captures name, email, phone, investment timeline, and message.
  * All labels and options driven from siteData.json.
  */
 import siteData from '../data/siteData.json';
@@ -31,9 +31,9 @@ const { contact } = siteData;
             <input type="tel" name="phone" placeholder="Phone Number" />
           </div>
           <div class="form-field">
-            <select name="allocation" required>
-              <option value="" disabled selected>Allocation Capacity</option>
-              {contact.allocationOptions.map((opt) => (
+            <select name="investmentTimeline" required>
+              <option value="" disabled selected>Investment Timeline</option>
+              {contact.timelineOptions.map((opt) => (
                 <option value={opt.value}>{opt.label}</option>
               ))}
             </select>

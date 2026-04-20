@@ -225,27 +225,27 @@
     "description": "Clarity and transparency are the bedrock of our fiduciary duty."
   },
   "contact": {
-    "allocationOptions": [
+    "timelineOptions": [
       {
-        "value": "250k-500k",
-        "label": "$250k - $500k"
+        "value": "immediately",
+        "label": "Immediately"
       },
       {
-        "value": "500k-1m",
-        "label": "$500k - $1M"
+        "value": "1-month",
+        "label": "Within 1 Month"
       },
       {
-        "value": "1m-5m",
-        "label": "$1M - $5M"
+        "value": "3-months",
+        "label": "Within 3 Months"
       },
       {
-        "value": "5m+",
-        "label": "$5M+"
+        "value": "6-months",
+        "label": "Within 6 Months"
       }
     ],
     "subtitle": "Get Started",
     "title": "Review the Prospectus.",
-    "description": "Initiate a private consultation with our principal team to explore current fund offerings and secure your allocation."
+    "description": "Initiate a private consultation with our principal team to explore current fund offerings and share your intended investment timeline."
   },
   "locations": {
     "offices": [
