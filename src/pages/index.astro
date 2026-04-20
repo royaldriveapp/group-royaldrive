@@ -43,21 +43,27 @@ import '../styles/global.css';
 
   <!-- Page Animations -->
   <script is:inline>
+    const isDesktopExperience = window.matchMedia('(min-width: 1025px)').matches;
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
     // ==============================================================
     // LENIS SMOOTH SCROLLING (Ultra Fluid)
     // ==============================================================
-    const lenis = new Lenis({
-      lerp: 0.05, // Lower is smoother/butter-like
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-    });
+    let lenis;
+    if (isDesktopExperience) {
+      lenis = new Lenis({
+        lerp: 0.05,
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+      });
 
-    lenis.on('scroll', ScrollTrigger.update);
+      lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    }
 
     // ==============================================================
     // CUSTOM CURSOR
@@ -65,7 +71,7 @@ import '../styles/global.css';
     const cursor = document.querySelector('.cursor');
     const follower = document.querySelector('.cursor-follower');
 
-    if (window.innerWidth > 1024 && cursor && follower) {
+    if (isDesktopExperience && hasFinePointer && cursor && follower) {
       let posX = 0, posY = 0;
       let mouseX = 0, mouseY = 0;
 
@@ -107,7 +113,7 @@ import '../styles/global.css';
     window.addEventListener('load', () => {
 
       // --- Magnetic Buttons ---
-      if (window.innerWidth > 1024) {
+      if (isDesktopExperience && hasFinePointer) {
         document.querySelectorAll('.btn, .accordion-header').forEach(btn => {
           btn.addEventListener('mousemove', (e) => {
             const rect = btn.getBoundingClientRect();

@@ -11,6 +11,8 @@ const {
   title = site.title,
   description = site.description
 } = Astro.props;
+const pathname = Astro.url.pathname;
+const isAdminPage = pathname.startsWith('/admin');
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -35,12 +37,34 @@ const {
 </head>
 <body>
   <!-- Custom Cursor -->
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
+  {!isAdminPage && <div class="cursor"></div>}
+  {!isAdminPage && <div class="cursor-follower"></div>}
 
   <slot />
-  <div data-chat-widget data-widget-id="69e1f01468322596ac70ce56" data-location-id="s2PduY2ugBQk7J9jRp5V"></div>
-  <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="69e1f01468322596ac70ce56"></script>
+  {!isAdminPage && (
+    <>
+      <div data-chat-widget data-widget-id="69e1f01468322596ac70ce56" data-location-id="s2PduY2ugBQk7J9jRp5V"></div>
+      <script is:inline>
+        window.addEventListener('load', () => {
+          const loadWidget = () => {
+            if (document.querySelector('script[data-rd-chat-widget]')) return;
+            const script = document.createElement('script');
+            script.src = 'https://widgets.leadconnectorhq.com/loader.js';
+            script.dataset.resourcesUrl = 'https://widgets.leadconnectorhq.com/chat-widget/loader.js';
+            script.dataset.widgetId = '69e1f01468322596ac70ce56';
+            script.dataset.rdChatWidget = 'true';
+            document.body.appendChild(script);
+          };
+
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadWidget, { timeout: 2500 });
+          } else {
+            window.setTimeout(loadWidget, 1200);
+          }
+        });
+      </script>
+    </>
+  )}
 
 </body>
 </html>
