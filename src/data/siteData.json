@@ -160,12 +160,12 @@
   "faq": {
     "items": [
       {
-        "question": "What is Royal Drive?",
-        "answer": "Royal Drive is a trusted pre-owned car dealership specializing in both luxury and budget vehicles. With over a decade of experience, we have built a strong reputation for quality, transparency, and customer satisfaction in South India.\n"
-      },
-      {
         "question": "What makes Royal Drive a reliable investment opportunity?",
         "answer": "Royal Drive operates in a high-demand, fast-moving automobile market with proven business performance. Our established brand presence, consistent sales cycle, and expansion plans make this a structured and growth-oriented investment opportunity.\n"
+      },
+      {
+        "question": "What is Royal Drive?",
+        "answer": "Royal Drive is a trusted pre-owned car dealership specializing in both luxury and budget vehicles. With over a decade of experience, we have built a strong reputation for quality, transparency, and customer satisfaction in South India.\n"
       },
       {
         "question": "Who can invest in Royal Drive?",
@@ -218,10 +218,6 @@
       {
         "question": "Can I verify the business before investing?",
         "answer": "Yes, we welcome investors to visit and understand our operations better before making a decision.\n"
-      },
-      {
-        "question": "How can I invest?",
-        "answer": "You can get started by contacting our investment team. We will guide you through the process, explain the plans, and assist you at every step.\n"
       }
     ],
     "subtitle": "Clarity & Transparency",
@@ -345,7 +341,7 @@
       },
       {
         "icon": "fa-brands fa-instagram",
-        "href": "#"
+        "href": "https://www.instagram.com/royaldrivellp/"
       }
     ],
     "tagline": "Accelerating wealth through tangible automotive assets."
