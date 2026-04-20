@@ -14,12 +14,12 @@ function applySecurityHeaders(response: Response) {
       "form-action 'self'",
       "upgrade-insecure-requests",
       // Admin UI + site use CDN assets and inline scripts/styles.
-      "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://*.google.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com",
-      "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com",
-      "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com",
+      "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://*.google.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com https://services.leadconnectorhq.com https://stcdn.leadconnectorhq.com",
+      "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com https://stcdn.leadconnectorhq.com",
+      "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com https://stcdn.leadconnectorhq.com",
       "img-src 'self' data: https:",
-      "connect-src 'self' https://api.github.com https: https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com",
-      "frame-src 'self' https://www.youtube.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com",
+      "connect-src 'self' https://api.github.com https: https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com https://services.leadconnectorhq.com https://stcdn.leadconnectorhq.com",
+      "frame-src 'self' https://www.youtube.com https://widgets.leadconnectorhq.com https://beta.leadconnectorhq.com https://services.leadconnectorhq.com",
     ].join('; ')
   );
 
