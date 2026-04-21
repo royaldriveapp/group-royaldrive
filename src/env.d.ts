@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly ADMIN_USERNAME?: string;
   readonly ADMIN_PASSWORD?: string;
+  readonly ADMIN_SESSION_SECRET?: string;
+  readonly SESSION_SECRET?: string;
   readonly GITHUB_TOKEN?: string;
   readonly GITHUB_REPO?: string;
   readonly GITHUB_BRANCH?: string;

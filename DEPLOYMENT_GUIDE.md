@@ -29,6 +29,7 @@ In Vercel, add these environment variables your site uses:
 - `PUBLIC_N8N_WEBHOOK_URL`
 - `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
+- `ADMIN_SESSION_SECRET`
 - `GITHUB_TOKEN`
 - `GITHUB_REPO`
 - `GITHUB_BRANCH`
@@ -37,6 +38,7 @@ Recommended values:
 
 - `GITHUB_REPO=marketing-it/group.royaldrive`
 - `GITHUB_BRANCH=main`
+- `ADMIN_SESSION_SECRET=` a long random secret value used only to sign admin sessions
 
 The `GITHUB_TOKEN` must have permission to update repository contents.
 
