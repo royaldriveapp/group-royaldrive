@@ -1,5 +1,4 @@
 ---
-import { readFileSync } from 'node:fs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,9 +7,6 @@ import siteData from '../data/siteData.json';
 import '../styles/global.css';
 
 const { contact } = siteData;
-const investorBannerDataUrl = `data:image/png;base64,${readFileSync(
-  new URL('../../public/images/investment-landscape.png', import.meta.url)
-).toString('base64')}`;
 ---
 
 <BaseLayout
@@ -23,7 +19,7 @@ const investorBannerDataUrl = `data:image/png;base64,${readFileSync(
     <section class="investor-hero" aria-label="Royal Drive investment banner">
       <img
         class="investor-hero-image"
-        src={investorBannerDataUrl}
+        src="/images/investment-landscape.png"
         alt="Royal Drive investment banner"
         width="1672"
         height="941"
