@@ -1,4 +1,514 @@
 ---
-export const prerender = false;
-return Astro.redirect('/', 308);
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import siteData from '../data/siteData.json';
+
+import '../styles/global.css';
+
+const { site, contact } = siteData;
 ---
+
+<BaseLayout
+  title="Royal Drive Investors | Private Investor Access"
+  description="Private investor access to Royal Drive's opportunity overview, capital strategy, and consultation request form."
+>
+  <Header />
+
+  <main class="investor-page">
+    <section class="investor-hero">
+      <div class="investor-overlay"></div>
+      <div class="container investor-hero-inner">
+        <div class="investor-copy">
+          <p class="subtitle">Private Investor Access</p>
+          <h1>Invest In Royal Drive&apos;s Next Chapter.</h1>
+          <p class="investor-lead">
+            Explore a focused overview of Royal Drive's alternative asset strategy, built around inventory velocity,
+            operational control, and premium automotive demand.
+          </p>
+
+          <div class="investor-points">
+            <div class="investor-point">
+              <span class="investor-point-label">Capital Focus</span>
+              <p>Asset-backed deployment centered on high-demand pre-owned premium inventory.</p>
+            </div>
+            <div class="investor-point">
+              <span class="investor-point-label">Operator Edge</span>
+              <p>Integrated sourcing, reconditioning, retail, and service capability under one brand umbrella.</p>
+            </div>
+            <div class="investor-point">
+              <span class="investor-point-label">Next Step</span>
+              <p>Submit your details to request the investor deck and a direct callback from the team.</p>
+            </div>
+          </div>
+
+          <div class="investor-metrics">
+            <div class="investor-metric">
+              <strong>1:1</strong>
+              <span>Private consultation flow</span>
+            </div>
+            <div class="investor-metric">
+              <strong>Fast</strong>
+              <span>Response through the same lead pipeline</span>
+            </div>
+            <div class="investor-metric">
+              <strong>{site.brandName}</strong>
+              <span>Unified with the main brand experience</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="investor-form-section" id="contact">
+      <div class="container investor-form-layout">
+        <div class="investor-form-copy">
+          <p class="subtitle">Request Access</p>
+          <h2>Start The Investor Conversation.</h2>
+          <p class="investor-form-lead">
+            Share your details and preferred timeline. The Royal Drive team will follow up with the next steps,
+            relevant material, and a direct conversation around fit.
+          </p>
+
+          <div class="investor-form-aside">
+            <div class="investor-aside-card">
+              <span class="investor-point-label">What You Can Request</span>
+              <p>Investor deck access, a direct callback, and a tailored discussion around your capital goals.</p>
+            </div>
+            <div class="investor-aside-card">
+              <span class="investor-point-label">Response Flow</span>
+              <p>Your enquiry feeds into the same lead system already used across the main Royal Drive site.</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="investor-form-shell" aria-labelledby="investor-form-title">
+          <div class="investor-form-head">
+            <p class="subtitle">Investor Enquiry</p>
+            <h2 id="investor-form-title">Request Investor Details</h2>
+            <p>Complete the form below and our team will contact you directly.</p>
+          </div>
+
+          <form class="investor-form" id="investor-form" data-webhook={import.meta.env.PUBLIC_N8N_WEBHOOK_URL}>
+            <input type="hidden" name="source" value="investors-subsite" />
+
+            <div class="form-field">
+              <input type="text" name="name" placeholder="Full Name" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <input type="email" name="email" placeholder="Email Address" required />
+              </div>
+              <div class="form-field">
+                <input type="tel" name="phone" placeholder="Phone Number" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <input type="text" name="city" placeholder="City / Region" />
+              </div>
+              <div class="form-field">
+                <select name="investmentTimeline" required>
+                  <option value="" disabled selected>Investment Timeline</option>
+                  {contact.timelineOptions.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <textarea
+                name="message"
+                rows="5"
+                placeholder="Tell us about your investment goals, capital range, or what you would like to receive."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary investor-submit">Request Investor Details</button>
+          </form>
+
+          <p class="investor-note">
+            By submitting this form, you are asking the Royal Drive investor relations team to contact you directly.
+          </p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    const investorForm = document.getElementById('investor-form');
+    const isDesktopExperience = window.matchMedia('(min-width: 1025px)').matches;
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    window.addEventListener('load', () => {
+      if (typeof gsap !== 'undefined') {
+        const tlInvestor = gsap.timeline();
+        tlInvestor
+          .from('.navbar', { y: -50, opacity: 0, duration: 1, ease: 'power3.out' })
+          .from('.investor-copy > *', { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out' }, '-=0.45')
+          .from('.investor-form-copy > *', { y: 24, opacity: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out' }, '-=0.4')
+          .from('.investor-form-shell', { y: 36, opacity: 0, duration: 0.85, ease: 'power3.out' }, '-=0.4');
+
+        if (isDesktopExperience && hasFinePointer) {
+          document.querySelectorAll('.btn').forEach((btn) => {
+            btn.addEventListener('mousemove', (event) => {
+              const rect = btn.getBoundingClientRect();
+              const x = event.clientX - rect.left - rect.width / 2;
+              const y = event.clientY - rect.top - rect.height / 2;
+              gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+              gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+            });
+          });
+        }
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', (event) => {
+          const href = anchor.getAttribute('href');
+          if (!href || href === '#') return;
+
+          const target = document.querySelector(href);
+          if (!target) return;
+
+          event.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    });
+
+    if (investorForm) {
+      investorForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const submitButton = investorForm.querySelector('.investor-submit');
+        const webhookUrl = investorForm.getAttribute('data-webhook');
+        const originalText = submitButton?.textContent || 'Request Investor Details';
+
+        if (!submitButton) return;
+
+        if (!webhookUrl || webhookUrl.includes('your-n8n-domain')) {
+          alert('n8n Webhook URL is not configured yet in .env!');
+          return;
+        }
+
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        submitButton.style.opacity = '0.8';
+
+        const formData = new FormData(investorForm);
+        const payload = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error('Server returned ' + response.status);
+          }
+
+          submitButton.textContent = 'Request Sent';
+          submitButton.style.background = 'linear-gradient(135deg, #2ecc71, #1abc9c)';
+          submitButton.style.opacity = '1';
+
+          window.setTimeout(() => {
+            investorForm.reset();
+            submitButton.textContent = originalText;
+            submitButton.style.background = '';
+            submitButton.disabled = false;
+          }, 2800);
+        } catch (error) {
+          console.error('Investor webhook payload failed:', error);
+          submitButton.textContent = 'Error Sending';
+          submitButton.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+          submitButton.style.opacity = '1';
+
+          window.setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.style.background = '';
+            submitButton.disabled = false;
+          }, 2800);
+        }
+      });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .investor-page {
+    background:
+      radial-gradient(circle at top right, rgba(201, 168, 76, 0.14), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0)),
+      var(--clr-bg);
+  }
+
+  .investor-hero {
+    position: relative;
+    min-height: 88vh;
+    padding: 9rem 0 5rem;
+    overflow: hidden;
+  }
+
+  .investor-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(3, 3, 3, 0.94) 0%, rgba(3, 3, 3, 0.82) 42%, rgba(3, 3, 3, 0.72) 100%),
+      url('/images/showroom.png') center/cover no-repeat;
+    transform: scale(1.03);
+  }
+
+  .investor-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(201, 168, 76, 0.18), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(201, 168, 76, 0.08), transparent 26%);
+    z-index: 0;
+  }
+
+  .investor-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+
+  .investor-copy h1 {
+    max-width: 11ch;
+    margin-bottom: 1.75rem;
+  }
+
+  .investor-lead {
+    max-width: 760px;
+    font-size: 1.16rem;
+    color: rgba(245, 245, 245, 0.82);
+    margin-bottom: 2.4rem;
+  }
+
+  .investor-points {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .investor-point {
+    padding: 1.2rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(8px);
+  }
+
+  .investor-point-label {
+    display: inline-block;
+    margin-bottom: 0.45rem;
+    color: var(--clr-gold);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .investor-point p {
+    color: rgba(245, 245, 245, 0.76);
+  }
+
+  .investor-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.25rem;
+  }
+
+  .investor-metric {
+    min-width: 180px;
+    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    background: rgba(10, 10, 10, 0.5);
+  }
+
+  .investor-metric strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--clr-text);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .investor-metric span {
+    color: rgba(245, 245, 245, 0.64);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .investor-form-section {
+    position: relative;
+    padding: 6rem 0 7rem;
+    background:
+      radial-gradient(circle at top left, rgba(201, 168, 76, 0.08), transparent 24%),
+      linear-gradient(180deg, #060606 0%, #030303 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .investor-form-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(340px, 520px);
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .investor-form-copy h2 {
+    max-width: 11ch;
+    margin-bottom: 1rem;
+  }
+
+  .investor-form-lead {
+    max-width: 560px;
+    margin-bottom: 2rem;
+    color: rgba(245, 245, 245, 0.76);
+  }
+
+  .investor-form-aside {
+    display: grid;
+    gap: 1rem;
+    max-width: 560px;
+  }
+
+  .investor-aside-card {
+    padding: 1.2rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  }
+
+  .investor-form-shell {
+    padding: 2rem;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+      rgba(7, 7, 7, 0.92);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+  }
+
+  .investor-form-head {
+    margin-bottom: 1.5rem;
+  }
+
+  .investor-form-head h2 {
+    margin-bottom: 0.8rem;
+  }
+
+  .investor-form-head p {
+    color: rgba(245, 245, 245, 0.65);
+  }
+
+  .investor-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .investor-form .form-field input,
+  .investor-form .form-field select,
+  .investor-form .form-field textarea {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--clr-text);
+    font: inherit;
+  }
+
+  .investor-form .form-field input::placeholder,
+  .investor-form .form-field textarea::placeholder {
+    color: rgba(245, 245, 245, 0.42);
+  }
+
+  .investor-form .form-field select {
+    appearance: none;
+  }
+
+  .investor-form .form-field textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  .investor-form .form-field input:focus,
+  .investor-form .form-field select:focus,
+  .investor-form .form-field textarea:focus {
+    outline: none;
+    border-color: rgba(201, 168, 76, 0.5);
+    box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.12);
+  }
+
+  .investor-submit {
+    width: 100%;
+  }
+
+  .investor-note {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: rgba(245, 245, 245, 0.48);
+  }
+
+  @media (max-width: 1024px) {
+    .investor-points {
+      grid-template-columns: 1fr;
+    }
+
+    .investor-form-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .investor-copy h1 {
+      max-width: 12ch;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .investor-hero {
+      padding: 7rem 0 4rem;
+    }
+
+    .investor-form-section {
+      padding: 4.5rem 0 5rem;
+    }
+
+    .investor-form-shell {
+      padding: 1.4rem;
+      border-radius: 22px;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .investor-metrics {
+      display: grid;
+    }
+  }
+</style>

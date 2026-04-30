@@ -3,12 +3,8 @@
   "installCommand": "npm install",
   "rewrites": [
     {
-      "source": "/investors",
-      "destination": "/"
-    },
-    {
       "source": "/investment",
-      "destination": "/"
+      "destination": "/investors"
     }
   ]
 }
