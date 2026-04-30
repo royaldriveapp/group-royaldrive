@@ -1,4 +1,5 @@
 ---
+import { readFileSync } from 'node:fs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -6,7 +7,10 @@ import siteData from '../data/siteData.json';
 
 import '../styles/global.css';
 
-const { site, contact } = siteData;
+const { contact } = siteData;
+const investorBannerDataUrl = `data:image/png;base64,${readFileSync(
+  new URL('../../public/images/investment-landscape.png', import.meta.url)
+).toString('base64')}`;
 ---
 
 <BaseLayout
@@ -16,47 +20,25 @@ const { site, contact } = siteData;
   <Header />
 
   <main class="investor-page">
-    <section class="investor-hero">
-      <div class="investor-overlay"></div>
-      <div class="container investor-hero-inner">
-        <div class="investor-copy">
-          <p class="subtitle">Private Investor Access</p>
-          <h1>Invest In Royal Drive&apos;s Next Chapter.</h1>
-          <p class="investor-lead">
-            Explore a focused overview of Royal Drive's alternative asset strategy, built around inventory velocity,
-            operational control, and premium automotive demand.
-          </p>
+    <section class="investor-hero" aria-label="Royal Drive investment banner">
+      <img
+        class="investor-hero-image"
+        src={investorBannerDataUrl}
+        alt="Royal Drive investment banner"
+        width="1672"
+        height="941"
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+      />
 
-          <div class="investor-points">
-            <div class="investor-point">
-              <span class="investor-point-label">Capital Focus</span>
-              <p>Asset-backed deployment centered on high-demand pre-owned premium inventory.</p>
-            </div>
-            <div class="investor-point">
-              <span class="investor-point-label">Operator Edge</span>
-              <p>Integrated sourcing, reconditioning, retail, and service capability under one brand umbrella.</p>
-            </div>
-            <div class="investor-point">
-              <span class="investor-point-label">Next Step</span>
-              <p>Submit your details to request the investor deck and a direct callback from the team.</p>
-            </div>
-          </div>
-
-          <div class="investor-metrics">
-            <div class="investor-metric">
-              <strong>1:1</strong>
-              <span>Private consultation flow</span>
-            </div>
-            <div class="investor-metric">
-              <strong>Fast</strong>
-              <span>Response through the same lead pipeline</span>
-            </div>
-            <div class="investor-metric">
-              <strong>{site.brandName}</strong>
-              <span>Unified with the main brand experience</span>
-            </div>
-          </div>
-        </div>
+      <div class="investor-hero-mobile-copy">
+        <p class="subtitle">Private Investor Access</p>
+        <h1>Limited-Period Investment Opportunity With Royal Drive.</h1>
+        <p>
+          Request the investor deck, a direct callback, and a tailored conversation around your capital goals.
+        </p>
+        <a href="#contact" class="btn btn-primary">Request Investor Details</a>
       </div>
     </section>
 
@@ -141,6 +123,9 @@ const { site, contact } = siteData;
   <Footer />
 
   <script is:inline>
+    const investorNavbar = document.getElementById('main-navbar');
+    investorNavbar?.classList.add('navbar-investors');
+
     const investorForm = document.getElementById('investor-form');
     const isDesktopExperience = window.matchMedia('(min-width: 1025px)').matches;
     const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -150,7 +135,7 @@ const { site, contact } = siteData;
         const tlInvestor = gsap.timeline();
         tlInvestor
           .from('.navbar', { y: -50, opacity: 0, duration: 1, ease: 'power3.out' })
-          .from('.investor-copy > *', { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out' }, '-=0.45')
+          .from('.investor-hero', { y: 24, opacity: 0, duration: 0.95, ease: 'power3.out' }, '-=0.45')
           .from('.investor-form-copy > *', { y: 24, opacity: 0, duration: 0.75, stagger: 0.1, ease: 'power3.out' }, '-=0.4')
           .from('.investor-form-shell', { y: 36, opacity: 0, duration: 0.85, ease: 'power3.out' }, '-=0.4');
 
@@ -250,120 +235,104 @@ const { site, contact } = siteData;
 <style>
   .investor-page {
     background:
-      radial-gradient(circle at top right, rgba(201, 168, 76, 0.14), transparent 24%),
+      radial-gradient(circle at top right, rgba(201, 168, 76, 0.1), transparent 24%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0)),
       var(--clr-bg);
   }
 
   .investor-hero {
     position: relative;
-    min-height: 88vh;
-    padding: 9rem 0 5rem;
+    width: 100%;
+    padding-top: clamp(92px, 9vw, 128px);
+    background:
+      radial-gradient(circle at top center, rgba(201, 168, 76, 0.14), transparent 42%),
+      linear-gradient(180deg, rgba(6, 6, 6, 0.94) 0%, rgba(6, 6, 6, 0.54) 16%, rgba(6, 6, 6, 0.12) 34%, rgba(6, 6, 6, 0) 48%);
     overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  .investor-hero::before {
+  .investor-hero::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, rgba(3, 3, 3, 0.94) 0%, rgba(3, 3, 3, 0.82) 42%, rgba(3, 3, 3, 0.72) 100%),
-      url('/images/showroom.png') center/cover no-repeat;
-    transform: scale(1.03);
+      linear-gradient(180deg, rgba(5, 5, 5, 0.48) 0%, rgba(5, 5, 5, 0.12) 16%, rgba(5, 5, 5, 0) 28%),
+      linear-gradient(180deg, rgba(5, 5, 5, 0) 72%, rgba(5, 5, 5, 0.5) 88%, #050505 100%);
+    pointer-events: none;
   }
 
-  .investor-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at top left, rgba(201, 168, 76, 0.18), transparent 28%),
-      radial-gradient(circle at bottom right, rgba(201, 168, 76, 0.08), transparent 26%);
-    z-index: 0;
-  }
-
-  .investor-hero-inner {
+  .investor-hero-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
     position: relative;
     z-index: 1;
-    display: block;
   }
 
-  .investor-copy h1 {
-    max-width: 11ch;
-    margin-bottom: 1.75rem;
+  .investor-hero-mobile-copy {
+    display: none;
   }
 
-  .investor-lead {
-    max-width: 760px;
-    font-size: 1.16rem;
-    color: rgba(245, 245, 245, 0.82);
-    margin-bottom: 2.4rem;
+  :global(.navbar.navbar-investors) {
+    background:
+      linear-gradient(180deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.68) 62%, rgba(5, 5, 5, 0.28) 100%);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   }
 
-  .investor-points {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+  :global(.navbar.navbar-investors.scrolled) {
+    background-color: rgba(3, 3, 3, 0.92);
   }
 
-  .investor-point {
-    padding: 1.2rem 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    backdrop-filter: blur(8px);
+  :global(.navbar.navbar-investors .logo) {
+    color: rgba(255, 255, 255, 0.98);
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.18);
   }
 
-  .investor-point-label {
-    display: inline-block;
-    margin-bottom: 0.45rem;
-    color: var(--clr-gold);
-    font-size: 0.76rem;
+  :global(.navbar.navbar-investors .logo .brand-accent) {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  :global(.navbar.navbar-investors .nav-links a) {
+    color: rgba(255, 255, 255, 0.74);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.18);
+  }
+
+  :global(.navbar.navbar-investors .nav-links a:hover) {
+    color: rgba(255, 255, 255, 0.98);
+  }
+
+  :global(.navbar.navbar-investors .nav-links a::after) {
+    background: linear-gradient(90deg, var(--clr-gold), rgba(201, 168, 76, 0.1));
+  }
+
+  :global(.navbar.navbar-investors .nav-cta) {
+    padding: 0.95rem 2.1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--clr-gold), #b8953f);
+    color: var(--clr-bg);
+    border: none;
+    box-shadow: 0 6px 22px rgba(201, 168, 76, 0.18);
     font-weight: 700;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    letter-spacing: 0.15em;
   }
 
-  .investor-point p {
-    color: rgba(245, 245, 245, 0.76);
-  }
-
-  .investor-metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2.25rem;
-  }
-
-  .investor-metric {
-    min-width: 180px;
-    padding: 1rem 1.1rem;
-    border-radius: 16px;
-    border: 1px solid rgba(201, 168, 76, 0.15);
-    background: rgba(10, 10, 10, 0.5);
-  }
-
-  .investor-metric strong {
-    display: block;
-    margin-bottom: 0.35rem;
-    color: var(--clr-text);
-    font-size: 1rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .investor-metric span {
-    color: rgba(245, 245, 245, 0.64);
-    font-size: 0.95rem;
-    line-height: 1.5;
+  :global(.navbar.navbar-investors .nav-cta:hover) {
+    background: linear-gradient(135deg, var(--clr-gold-light), var(--clr-gold));
+    color: var(--clr-bg);
+    box-shadow: 0 10px 28px rgba(201, 168, 76, 0.24);
   }
 
   .investor-form-section {
     position: relative;
-    padding: 6rem 0 7rem;
+    padding: 5.5rem 0 7rem;
     background:
       radial-gradient(circle at top left, rgba(201, 168, 76, 0.08), transparent 24%),
       linear-gradient(180deg, #060606 0%, #030303 100%);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
   }
 
   .investor-form-layout {
@@ -395,6 +364,16 @@ const { site, contact } = siteData;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 18px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  }
+
+  .investor-point-label {
+    display: inline-block;
+    margin-bottom: 0.45rem;
+    color: var(--clr-gold);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
   }
 
   .investor-form-shell {
@@ -476,22 +455,41 @@ const { site, contact } = siteData;
   }
 
   @media (max-width: 1024px) {
-    .investor-points {
-      grid-template-columns: 1fr;
-    }
-
     .investor-form-layout {
       grid-template-columns: 1fr;
-    }
-
-    .investor-copy h1 {
-      max-width: 12ch;
     }
   }
 
   @media (max-width: 640px) {
     .investor-hero {
-      padding: 7rem 0 4rem;
+      padding-top: 84px;
+    }
+
+    .investor-hero-image {
+      min-height: 280px;
+      object-fit: cover;
+      object-position: left center;
+    }
+
+    .investor-hero-mobile-copy {
+      display: block;
+      position: relative;
+      z-index: 2;
+      padding: 1.5rem 5% 2rem;
+      background: linear-gradient(180deg, rgba(5, 5, 5, 0.04) 0%, rgba(5, 5, 5, 0.8) 28%, #050505 100%);
+    }
+
+    .investor-hero-mobile-copy h1 {
+      font-size: clamp(2rem, 8vw, 2.8rem);
+      line-height: 1.05;
+      margin-bottom: 0.9rem;
+      max-width: 11ch;
+    }
+
+    .investor-hero-mobile-copy p:not(.subtitle) {
+      max-width: 32ch;
+      color: rgba(245, 245, 245, 0.74);
+      margin-bottom: 1.25rem;
     }
 
     .investor-form-section {
@@ -507,8 +505,5 @@ const { site, contact } = siteData;
       grid-template-columns: 1fr;
     }
 
-    .investor-metrics {
-      display: grid;
-    }
   }
 </style>

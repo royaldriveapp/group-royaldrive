@@ -133,6 +133,10 @@ p {
   padding: 0 5%;
 }
 
+section[id] {
+  scroll-margin-top: 120px;
+}
+
 .section-header {
   max-width: 680px;
   margin-bottom: 4rem;
@@ -276,8 +280,12 @@ p {
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-  transition: padding 0.4s ease, background-color 0.4s ease, border-bottom 0.4s ease;
+  transition: top 0.35s ease, padding 0.4s ease, background-color 0.4s ease, border-bottom 0.4s ease;
   border-bottom: 1px solid transparent;
+}
+
+.navbar.nav-hidden {
+  top: -140px;
 }
 
 .navbar.scrolled {
@@ -349,6 +357,14 @@ p {
 }
 
 .nav-links a:hover::after { width: 100%; }
+
+.nav-links a:focus-visible,
+.logo:focus-visible,
+.btn:focus-visible,
+.menu-toggle:focus-visible {
+  outline: 2px solid rgba(201, 168, 76, 0.85);
+  outline-offset: 4px;
+}
 
 /* Mobile Menu Toggle */
 .menu-toggle {

@@ -7,16 +7,18 @@
  */
 import siteData from '../data/siteData.json';
 const { site, navigation } = siteData;
+const pathname = Astro.url.pathname;
+const isInvestorsPage = pathname === '/investors';
 ---
 
 <nav class="navbar" id="main-navbar">
-  <a href="#" class="logo">
+  <a href="/" class="logo">
     {site.brandName} <span class="brand-accent">{site.brandTagline}</span>
   </a>
 
   <div class="nav-links" id="nav-links">
     {navigation.links.map((link) => (
-      <a href={link.href}>{link.label}</a>
+      <a href={isInvestorsPage ? `/${link.href}` : link.href}>{link.label}</a>
     ))}
   </div>
 
@@ -64,9 +66,23 @@ const { site, navigation } = siteData;
 
   // Navbar scroll effect
   const navbar = document.getElementById('main-navbar');
+  let lastScrollY = window.scrollY;
+
   window.addEventListener('scroll', () => {
     if (navbar) {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      const isMenuOpen = navLinks?.classList.contains('mobile-open');
+      const isDesktopNav = window.matchMedia('(min-width: 769px)').matches;
+
+      navbar.classList.toggle('scrolled', currentScrollY > 50);
+
+      if (!isDesktopNav || isMenuOpen || currentScrollY < 80 || currentScrollY < lastScrollY) {
+        navbar.classList.remove('nav-hidden');
+      } else if (currentScrollY > lastScrollY) {
+        navbar.classList.add('nav-hidden');
+      }
+
+      lastScrollY = currentScrollY;
     }
   });
 </script>
